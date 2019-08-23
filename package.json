@@ -1,0 +1,44 @@
+{
+  "name": "@naturalcycles/mongo-lib",
+  "scripts": {},
+  "dependencies": {
+    "@naturalcycles/db-lib": "^1.9.1",
+    "@naturalcycles/js-lib": "^8.6.1",
+    "@naturalcycles/nodejs-lib": "^6.13.0",
+    "@types/mongodb": "^3.3.0",
+    "chalk": "^2.4.2",
+    "mongodb": "^3.3.0",
+    "rxjs": "^6.5.2"
+  },
+  "devDependencies": {
+    "@naturalcycles/db-dev-lib": "^1.1.8",
+    "@naturalcycles/dev-lib": "^7.16.3",
+    "@types/node": "^12.7.2",
+    "dotenv": "^8.1.0",
+    "jest": "^24.9.0"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!src/test",
+    "!src/**/*.test.ts",
+    "!src/**/__snapshots__",
+    "!src/**/__exclude"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NaturalCycles/mongo-lib"
+  },
+  "engines": {
+    "node": ">=10.13"
+  },
+  "version": "0.0.0",
+  "description": "MongoDB implementation of CommonDB interface",
+  "author": "Natural Cycles Team",
+  "license": "MIT"
+}
