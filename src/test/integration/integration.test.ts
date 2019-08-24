@@ -19,10 +19,6 @@ const mongo = new MongoDB({
   db: 'db1',
 })
 
-beforeAll(async () => {
-  await mongo.connect()
-})
-
 afterAll(async () => {
   await mongo.close()
 })

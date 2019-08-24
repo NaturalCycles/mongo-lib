@@ -5,9 +5,10 @@ import {
   CommonDBSaveOptions,
   DBQuery,
 } from '@naturalcycles/db-lib'
+import { memo } from '@naturalcycles/js-lib'
 import { Debug, streamToObservable } from '@naturalcycles/nodejs-lib'
 import { MongoClient, MongoClientOptions } from 'mongodb'
-import { Observable } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { dbQueryToMongoQuery } from './query.util'
 
@@ -24,22 +25,23 @@ const log = Debug('nc:mongo-lib')
 export class MongoDB implements CommonDB {
   constructor (public cfg: MongoDBCfg) {}
 
-  public client!: MongoClient
-
-  async connect (): Promise<void> {
+  @memo()
+  async client (): Promise<MongoClient> {
     const client = new MongoClient(this.cfg.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       ...(this.cfg.options || {}),
     })
 
-    this.client = await client.connect()
+    await client.connect()
 
     log(`connect`)
+    return client
   }
 
   async close (): Promise<void> {
-    await this.client.close()
+    const client = await this.client()
+    await client.close()
     log(`close`)
   }
 
@@ -60,19 +62,21 @@ export class MongoDB implements CommonDB {
     dbms: DBM[],
     opts?: CommonDBSaveOptions,
   ): Promise<void> {
-    const col = this.client.db(this.cfg.db).collection(table)
-
-    await col.bulkWrite(
-      dbms.map(dbm => ({
-        replaceOne: {
-          filter: {
-            _id: dbm.id,
+    const client = await this.client()
+    await client
+      .db(this.cfg.db)
+      .collection(table)
+      .bulkWrite(
+        dbms.map(dbm => ({
+          replaceOne: {
+            filter: {
+              _id: dbm.id,
+            },
+            replacement: this.mapToMongo(dbm),
+            upsert: true,
           },
-          replacement: this.mapToMongo(dbm),
-          upsert: true,
-        },
-      })),
-    )
+        })),
+      )
 
     // console.log(res)
   }
@@ -82,9 +86,10 @@ export class MongoDB implements CommonDB {
     ids: string[],
     opts?: CommonDBOptions,
   ): Promise<DBM[]> {
-    const col = this.client.db(this.cfg.db).collection(table)
-
-    const items: MongoObject<DBM>[] = await col
+    const client = await this.client()
+    const items: MongoObject<DBM>[] = await client
+      .db(this.cfg.db)
+      .collection(table)
       .find({
         _id: {
           $in: ids,
@@ -95,7 +100,8 @@ export class MongoDB implements CommonDB {
   }
 
   async deleteByIds (table: string, ids: string[], opts?: CommonDBOptions): Promise<number> {
-    const { deletedCount } = await this.client
+    const client = await this.client()
+    const { deletedCount } = await client
       .db(this.cfg.db)
       .collection(table)
       .deleteMany({
@@ -111,9 +117,10 @@ export class MongoDB implements CommonDB {
     q: DBQuery<DBM>,
     opts?: CommonDBOptions,
   ): Promise<DBM[]> {
+    const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q)
 
-    const items: MongoObject<DBM>[] = await this.client
+    const items: MongoObject<DBM>[] = await client
       .db(this.cfg.db)
       .collection(q.table)
       .find(query, options)
@@ -125,9 +132,10 @@ export class MongoDB implements CommonDB {
     q: DBQuery<DBM>,
     opts?: CommonDBOptions,
   ): Promise<number> {
+    const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q.select([]))
 
-    const items: MongoObject<{}>[] = await this.client
+    const items: MongoObject<{}>[] = await client
       .db(this.cfg.db)
       .collection(q.table)
       .find(query, options)
@@ -139,9 +147,10 @@ export class MongoDB implements CommonDB {
     q: DBQuery<DBM>,
     opts?: CommonDBOptions,
   ): Promise<number> {
+    const client = await this.client()
     const { query } = dbQueryToMongoQuery(q)
 
-    const { deletedCount } = await this.client
+    const { deletedCount } = await client
       .db(this.cfg.db)
       .collection(q.table)
       .deleteMany(query)
@@ -152,10 +161,20 @@ export class MongoDB implements CommonDB {
   streamQuery<DBM extends BaseDBEntity> (q: DBQuery<DBM>, opts?: CommonDBOptions): Observable<DBM> {
     const { query, options } = dbQueryToMongoQuery(q)
 
-    return streamToObservable<MongoObject<DBM>>(this.client
-      .db(this.cfg.db)
-      .collection(q.table)
-      .find(query, options)
-      .stream() as NodeJS.ReadableStream).pipe(map(i => this.mapFromMongo(i)))
+    const subj = new Subject<DBM>()
+
+    void this.client()
+      .then(client => {
+        streamToObservable<MongoObject<DBM>>(client
+          .db(this.cfg.db)
+          .collection(q.table)
+          .find(query, options)
+          .stream() as NodeJS.ReadableStream)
+          .pipe(map(i => this.mapFromMongo(i)))
+          .subscribe(subj)
+      })
+      .catch(err => subj.error(err))
+
+    return subj
   }
 }

@@ -6,5 +6,5 @@ test('test1', async () => {
     uri: 'abc',
     db: TEST_TABLE,
   })
-  await expect(mongo.connect()).rejects.toThrow()
+  await expect(mongo.client()).rejects.toThrow()
 })
