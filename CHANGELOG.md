@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/NaturalCycles/mongo-lib/compare/v1.1.0...v1.1.1) (2019-08-25)
+
+
+### Bug Fixes
+
+* saveBatch([]); feat: distinct() ([6ba0c00](https://github.com/NaturalCycles/mongo-lib/commit/6ba0c00))
+
 # [1.1.0](https://github.com/NaturalCycles/mongo-lib/compare/v1.0.0...v1.1.0) (2019-08-24)
 
 
