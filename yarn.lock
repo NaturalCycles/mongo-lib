@@ -476,9 +476,9 @@
     type-fest "^0.7.1"
 
 "@naturalcycles/db-lib@^1.2.1", "@naturalcycles/db-lib@^1.9.1":
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/db-lib/-/db-lib-1.10.1.tgz#4901bb43110242d4c9a9f9f79b3e7a10348f6104"
-  integrity sha512-kNau6iyrbBuc8Upu0T1ieKPuY/1c/PnQXm9VABtx+TTuavYhJEViILwl8hMeg8ZZr/K6BOnCfX+HMBJYnlII0Q==
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/db-lib/-/db-lib-1.10.2.tgz#dbc23d4fe3d86390ca208908923f6c4a804c6ab3"
+  integrity sha512-w1PcvWd4dVf+JaqVYGYlQFuxmPJyrAx45sjECNO1C95ekJa1f84Eohucq2aPCxsPa7IMHT77mNMHVTPaP0ZD5A==
   dependencies:
     "@naturalcycles/js-lib" "^8.2.1"
     "@naturalcycles/nodejs-lib" "^6.5.0"
@@ -488,20 +488,22 @@
     type-fest "^0.7.1"
 
 "@naturalcycles/dev-lib@^7.16.3":
-  version "7.16.3"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/dev-lib/-/dev-lib-7.16.3.tgz#e2e3f23deaabe2d89064db0178036011a900d724"
-  integrity sha512-emNlOR/EfDkaEc7lzY42ByrJWcVvutzx5tRR09aZdJUD+I17hCPrHliOhIsjhhIUQVJFH+ofJG0Q5f4pQ7MFag==
+  version "7.17.0"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/dev-lib/-/dev-lib-7.17.0.tgz#476993b9e3e370a792141a2b9cfb84f560bd2656"
+  integrity sha512-O7v1pLGkvhLOOQFoGGBJT09ifOkTJk7AHTTDYyuRyx3dk39NtgT7CvLMtxjhdcZgklaAW7qu+Yp81zU5gzoLiQ==
   dependencies:
     "@commitlint/cli" "^8.0.0"
     "@commitlint/config-conventional" "^8.0.0"
     "@naturalcycles/fs-lib" "^2.0.0"
     "@naturalcycles/js-lib" "^8.0.0"
+    "@types/dotenv" "^6.1.1"
     "@types/fs-extra" "^8.0.0"
     "@types/jest" "^24.0.6"
     "@types/node" "^12.0.0"
     "@types/yargs" "^13.0.0"
     chalk "^2.4.2"
     command-exists "^1.2.8"
+    dotenv "^8.1.0"
     execa "^2.0.3"
     fs-extra "^8.0.0"
     husky "^3.0.0"
@@ -517,12 +519,13 @@
     yargs "^14.0.0"
 
 "@naturalcycles/fs-lib@^2.0.0":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/fs-lib/-/fs-lib-2.4.1.tgz#f244b842c19251d3f154de9c4c4bb9e13954eda5"
-  integrity sha512-AoIcKrlbQcJS4g/ubKbjjgDJUBRqFqy9Zmua1lVv0f05GhniNqfk+9XchtkmxVjwJ75liQSfsKp55Wjm/i1FZA==
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/fs-lib/-/fs-lib-2.4.3.tgz#c7d2c6841e20f861aabebc053e5cf5da455d74be"
+  integrity sha512-+u1a/c2nXlayWe6xtFetib1Ix58NT43OXMsSmat6bw3JST8T+ehu2+VzDz5evTqbxoh3xzZuOA0lmDK3TDVdeQ==
   dependencies:
     "@naturalcycles/js-lib" "^8.4.0"
-    ansi-colors "^4.1.1"
+    "@naturalcycles/time-lib" "^1.5.0"
+    chalk "^2.4.2"
     cp-file "^7.0.0"
     fs-extra "^8.1.0"
     globby "^10.0.1"
@@ -538,16 +541,18 @@
     type-fest "^0.7.1"
 
 "@naturalcycles/nodejs-lib@^6.13.0", "@naturalcycles/nodejs-lib@^6.5.0":
-  version "6.13.0"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/nodejs-lib/-/nodejs-lib-6.13.0.tgz#93743992055ec8babb00fb8d398fba798171408d"
-  integrity sha512-I4zJ7JWfedLcyLCzuSatvK3KJkzg+obsogCelMDpepb8b6PEHDYrQDdLlpTCiS5/1Gmhouw3kYpZV9f72sQhTg==
+  version "6.16.2"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/nodejs-lib/-/nodejs-lib-6.16.2.tgz#75097feef94e7f00d2d75f2014f4a7af59869ef8"
+  integrity sha512-L8z41vFPftrGU+H7SJ9u2eLSGW3pEVsysnLPoXyU/+8Qy7R+hQHuwbG3wFK/K28K5RpLM2VJ5V6+InRawUxxoQ==
   dependencies:
     "@hapi/joi" "^15.0.2"
     "@naturalcycles/js-lib" "^8.0.0"
     "@naturalcycles/time-lib" "^1.0.0"
+    "@types/dotenv" "^6.1.1"
     "@types/hapi__joi" "^15.0.1"
     "@types/lru-cache" "^5.1.0"
     debug "^4.1.1"
+    dotenv "^8.1.0"
     lru-cache "^5.1.1"
     nanoid "^2.0.2"
     rxjs "^6.5.2"
@@ -559,7 +564,7 @@
   dependencies:
     timekeeper "^2.2.0"
 
-"@naturalcycles/time-lib@^1.0.0", "@naturalcycles/time-lib@^1.4.3":
+"@naturalcycles/time-lib@^1.0.0", "@naturalcycles/time-lib@^1.4.3", "@naturalcycles/time-lib@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@naturalcycles/time-lib/-/time-lib-1.5.0.tgz#3b80ff2310b8efc3279ad6aad3dc1134dcf15a6c"
   integrity sha512-oPX+etA74zP2ffm5ojv1uAI8LhCFz7c5JtY7SNR4DoXaYO77+RyPq3Z9ef6tXawMySziCX9Sm2/evGqT7K2tsA==
@@ -631,6 +636,13 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/bson/-/bson-4.0.0.tgz#9073772679d749116eb1dfca56f8eaac6d59cc7a"
   integrity sha512-pq/rqJwJWkbS10crsG5bgnrisL8pML79KlMKQMoQwLUjlPAkrUHMvHJ3oGwE7WHR61Lv/nadMwXVAD2b+fpD8Q==
+  dependencies:
+    "@types/node" "*"
+
+"@types/dotenv@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@types/dotenv/-/dotenv-6.1.1.tgz#f7ce1cc4fe34f0a4373ba99fefa437b0bec54b46"
+  integrity sha512-ftQl3DtBvqHl9L16tpqqzA4YzCSXZfi7g8cQceTz5rOlYtk/IZbFjAv3mLOQlNIgOaylCQWQoBdDQHPgEBJPHg==
   dependencies:
     "@types/node" "*"
 
@@ -794,11 +806,6 @@ ajv@^6.5.5:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
-
-ansi-colors@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-4.1.1.tgz#cbb9ae256bf750af1eab344f229aa27fe94ba348"
-  integrity sha512-JoX0apGbHaUJBNl6yF+p6JAFYZ666/hhCGKN5t9QFjbJQKUU/g8MNbFDbvfrgKXvI1QpZplPOnwIo99lX/AAmA==
 
 ansi-escapes@^3.0.0:
   version "3.2.0"
@@ -3594,9 +3601,9 @@ nan@^2.12.1:
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
 
 nanoid@^2.0.2:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.0.3.tgz#dde999e173bc9d7bd2ee2746b89909ade98e075e"
-  integrity sha512-NbaoqdhIYmY6FXDRB4eYtDVC9Z9eCbn8TyaiC16LNKtpPv/aqa0tOPD8y6gNE4yUNnaZ7LLhYtXOev/6+cBtfw==
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.0.4.tgz#4889355c9ce8e24efad7c65945a4a2875ac3e8f4"
+  integrity sha512-sOJnBmY3TJQBVIBqKHoifuwygrocXg3NjS9rZSMnVl05XWSHK7Qxb177AIZQyMDjP86bz+yneozj/h9qsPLcCA==
 
 nanomatch@^1.2.9:
   version "1.2.13"

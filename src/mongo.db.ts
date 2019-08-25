@@ -7,7 +7,7 @@ import {
 } from '@naturalcycles/db-lib'
 import { memo } from '@naturalcycles/js-lib'
 import { Debug, streamToObservable } from '@naturalcycles/nodejs-lib'
-import { MongoClient, MongoClientOptions } from 'mongodb'
+import { FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
 import { Observable, Subject } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { dbQueryToMongoQuery } from './query.util'
@@ -62,6 +62,8 @@ export class MongoDB implements CommonDB {
     dbms: DBM[],
     opts?: CommonDBSaveOptions,
   ): Promise<void> {
+    if (!dbms.length) return
+
     const client = await this.client()
     await client
       .db(this.cfg.db)
@@ -86,6 +88,8 @@ export class MongoDB implements CommonDB {
     ids: string[],
     opts?: CommonDBOptions,
   ): Promise<DBM[]> {
+    if (!ids.length) return []
+
     const client = await this.client()
     const items: MongoObject<DBM>[] = await client
       .db(this.cfg.db)
@@ -100,6 +104,8 @@ export class MongoDB implements CommonDB {
   }
 
   async deleteByIds (table: string, ids: string[], opts?: CommonDBOptions): Promise<number> {
+    if (!ids.length) return 0
+
     const client = await this.client()
     const { deletedCount } = await client
       .db(this.cfg.db)
@@ -176,5 +182,13 @@ export class MongoDB implements CommonDB {
       .catch(err => subj.error(err))
 
     return subj
+  }
+
+  async distinct<T = any> (table: string, key: string, query: FilterQuery<any>): Promise<T> {
+    const client = await this.client()
+    return client
+      .db(this.cfg.db)
+      .collection(table)
+      .distinct(key, query)
   }
 }
