@@ -26,7 +26,9 @@ export function dbQueryToMongoQuery (
   // filter
   const query = dbQuery._filters.reduce(
     (q, f) => {
-      q[FNAME_MAP[f.name] || f.name] = {
+      const fname = FNAME_MAP[f.name] || f.name
+      q[fname] = {
+        ...q[fname], // in case there is a "between" query
         [OP_MAP[f.op] || f.op]: f.val,
       }
       return q

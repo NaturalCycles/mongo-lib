@@ -184,7 +184,7 @@ export class MongoDB implements CommonDB {
     return subj
   }
 
-  async distinct<T = any> (table: string, key: string, query: FilterQuery<any>): Promise<T> {
+  async distinct<T = any> (table: string, key: string, query: FilterQuery<any> = {}): Promise<T[]> {
     const client = await this.client()
     return client
       .db(this.cfg.db)
