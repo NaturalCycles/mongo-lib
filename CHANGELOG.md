@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/NaturalCycles/mongo-lib/compare/v1.1.1...v1.1.2) (2019-09-14)
+
+
+### Bug Fixes
+
+* "between" query ([c903759](https://github.com/NaturalCycles/mongo-lib/commit/c903759))
+
 ## [1.1.1](https://github.com/NaturalCycles/mongo-lib/compare/v1.1.0...v1.1.1) (2019-08-25)
 
 
