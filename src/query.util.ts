@@ -15,7 +15,7 @@ const FNAME_MAP: Record<string, string> = {
   id: '_id',
 }
 
-export function dbQueryToMongoQuery (
+export function dbQueryToMongoQuery(
   dbQuery: DBQuery,
 ): {
   query: FilterQuery<any>
