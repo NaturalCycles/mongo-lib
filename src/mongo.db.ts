@@ -1,9 +1,10 @@
 import {
-  BaseDBEntity,
   CommonDB,
   CommonDBOptions,
   CommonDBSaveOptions,
   DBQuery,
+  RunQueryResult,
+  SavedDBEntity,
 } from '@naturalcycles/db-lib'
 import { memo } from '@naturalcycles/js-lib'
 import { Debug, streamToObservable } from '@naturalcycles/nodejs-lib'
@@ -23,10 +24,10 @@ export interface MongoDBCfg {
 const log = Debug('nc:mongo-lib')
 
 export class MongoDB implements CommonDB {
-  constructor (public cfg: MongoDBCfg) {}
+  constructor(public cfg: MongoDBCfg) {}
 
   @memo()
-  async client (): Promise<MongoClient> {
+  async client(): Promise<MongoClient> {
     const client = new MongoClient(this.cfg.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -39,25 +40,25 @@ export class MongoDB implements CommonDB {
     return client
   }
 
-  async close (): Promise<void> {
+  async close(): Promise<void> {
     const client = await this.client()
     await client.close()
     log(`close`)
   }
 
-  async resetCache (): Promise<void> {}
+  async resetCache(): Promise<void> {}
 
-  protected mapToMongo<DBM extends BaseDBEntity> (dbm: DBM): MongoObject<DBM> {
+  protected mapToMongo<DBM extends SavedDBEntity>(dbm: DBM): MongoObject<DBM> {
     const { id, ...m } = { ...dbm, _id: dbm.id }
     return m as any
   }
 
-  protected mapFromMongo<DBM extends BaseDBEntity> (item: MongoObject<DBM>): DBM {
+  protected mapFromMongo<DBM extends SavedDBEntity>(item: MongoObject<DBM>): DBM {
     const { _id, ...dbm } = { ...item, id: item._id }
     return dbm as any
   }
 
-  async saveBatch<DBM extends BaseDBEntity> (
+  async saveBatch<DBM extends SavedDBEntity>(
     table: string,
     dbms: DBM[],
     opts?: CommonDBSaveOptions,
@@ -83,7 +84,7 @@ export class MongoDB implements CommonDB {
     // console.log(res)
   }
 
-  async getByIds<DBM extends BaseDBEntity> (
+  async getByIds<DBM extends SavedDBEntity>(
     table: string,
     ids: string[],
     opts?: CommonDBOptions,
@@ -103,7 +104,7 @@ export class MongoDB implements CommonDB {
     return items.map(i => this.mapFromMongo(i))
   }
 
-  async deleteByIds (table: string, ids: string[], opts?: CommonDBOptions): Promise<number> {
+  async deleteByIds(table: string, ids: string[], opts?: CommonDBOptions): Promise<number> {
     if (!ids.length) return 0
 
     const client = await this.client()
@@ -119,10 +120,10 @@ export class MongoDB implements CommonDB {
     return deletedCount || 0
   }
 
-  async runQuery<DBM extends BaseDBEntity> (
+  async runQuery<DBM extends SavedDBEntity>(
     q: DBQuery<DBM>,
     opts?: CommonDBOptions,
-  ): Promise<DBM[]> {
+  ): Promise<RunQueryResult<DBM>> {
     const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q)
 
@@ -131,10 +132,10 @@ export class MongoDB implements CommonDB {
       .collection(q.table)
       .find(query, options)
       .toArray()
-    return items.map(i => this.mapFromMongo(i))
+    return { records: items.map(i => this.mapFromMongo(i)) }
   }
 
-  async runQueryCount<DBM extends BaseDBEntity> (
+  async runQueryCount<DBM extends SavedDBEntity>(
     q: DBQuery<DBM>,
     opts?: CommonDBOptions,
   ): Promise<number> {
@@ -149,7 +150,7 @@ export class MongoDB implements CommonDB {
     return items.length
   }
 
-  async deleteByQuery<DBM extends BaseDBEntity> (
+  async deleteByQuery<DBM extends SavedDBEntity>(
     q: DBQuery<DBM>,
     opts?: CommonDBOptions,
   ): Promise<number> {
@@ -164,7 +165,7 @@ export class MongoDB implements CommonDB {
     return deletedCount || 0
   }
 
-  streamQuery<DBM extends BaseDBEntity> (q: DBQuery<DBM>, opts?: CommonDBOptions): Observable<DBM> {
+  streamQuery<DBM extends SavedDBEntity>(q: DBQuery<DBM>, opts?: CommonDBOptions): Observable<DBM> {
     const { query, options } = dbQueryToMongoQuery(q)
 
     const subj = new Subject<DBM>()
@@ -184,7 +185,7 @@ export class MongoDB implements CommonDB {
     return subj
   }
 
-  async distinct<T = any> (table: string, key: string, query: FilterQuery<any> = {}): Promise<T[]> {
+  async distinct<T = any>(table: string, key: string, query: FilterQuery<any> = {}): Promise<T[]> {
     const client = await this.client()
     return client
       .db(this.cfg.db)
