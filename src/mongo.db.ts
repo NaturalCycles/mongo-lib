@@ -122,7 +122,7 @@ export class MongoDB implements CommonDB {
   }
 
   async runQuery<DBM extends SavedDBEntity, OUT = DBM>(
-    q: DBQuery<DBM>,
+    q: DBQuery<any, DBM>,
     opts?: CommonDBOptions,
   ): Promise<RunQueryResult<OUT>> {
     const client = await this.client()
@@ -161,7 +161,7 @@ export class MongoDB implements CommonDB {
   }
 
   streamQuery<DBM extends SavedDBEntity, OUT = DBM>(
-    q: DBQuery<DBM>,
+    q: DBQuery<any, DBM>,
     opts?: CommonDBOptions,
   ): Observable<OUT> {
     const { query, options } = dbQueryToMongoQuery(q)
