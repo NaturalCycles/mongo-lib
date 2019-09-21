@@ -15,10 +15,6 @@ afterAll(async () => {
   await mongoDB.close()
 })
 
-test('testDB', async () => {
-  await runCommonDBTest(mongoDB)
-})
+describe('runCommonDBTest', () => runCommonDBTest(mongoDB))
 
-test('testDao', async () => {
-  await runCommonDaoTest(mongoDB)
-})
+describe('runCommonDaoTest', () => runCommonDaoTest(mongoDB))
