@@ -1,3 +1,20 @@
+# [2.0.0](https://github.com/NaturalCycles/mongo-lib/compare/v1.1.5...v2.0.0) (2019-10-19)
+
+
+### Bug Fixes
+
+* joi types ([c171a83](https://github.com/NaturalCycles/mongo-lib/commit/c171a83))
+
+
+### Features
+
+* implement CommonDB 2.0 ([dcb8bdb](https://github.com/NaturalCycles/mongo-lib/commit/dcb8bdb))
+
+
+### BREAKING CHANGES
+
+* ^^^
+
 ## [1.1.5](https://github.com/NaturalCycles/mongo-lib/compare/v1.1.4...v1.1.5) (2019-09-21)
 
 
