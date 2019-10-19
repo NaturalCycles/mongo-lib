@@ -15,6 +15,9 @@
     "dotenv": "^8.1.0",
     "jest": "^24.9.0"
   },
+  "resolutions": {
+    "@types/hapi__joi": "15.0.4"
+  },
   "files": [
     "dist",
     "src",
