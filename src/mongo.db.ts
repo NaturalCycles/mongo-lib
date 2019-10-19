@@ -8,10 +8,9 @@ import {
   SavedDBEntity,
 } from '@naturalcycles/db-lib'
 import { memo } from '@naturalcycles/js-lib'
-import { Debug, streamToObservable } from '@naturalcycles/nodejs-lib'
+import { Debug } from '@naturalcycles/nodejs-lib'
 import { FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
-import { Observable, Subject } from 'rxjs'
-import { map } from 'rxjs/operators'
+import { Readable, Transform } from 'stream'
 import { dbQueryToMongoQuery } from './query.util'
 
 export type MongoObject<T> = T & { _id: string }
@@ -62,7 +61,7 @@ export class MongoDB implements CommonDB {
   async saveBatch<DBM extends SavedDBEntity>(
     table: string,
     dbms: DBM[],
-    opts?: CommonDBSaveOptions,
+    opt?: CommonDBSaveOptions,
   ): Promise<void> {
     if (!dbms.length) return
 
@@ -88,7 +87,7 @@ export class MongoDB implements CommonDB {
   async getByIds<DBM extends SavedDBEntity>(
     table: string,
     ids: string[],
-    opts?: CommonDBOptions,
+    opt?: CommonDBOptions,
   ): Promise<DBM[]> {
     if (!ids.length) return []
 
@@ -105,7 +104,7 @@ export class MongoDB implements CommonDB {
     return items.map(i => this.mapFromMongo(i))
   }
 
-  async deleteByIds(table: string, ids: string[], opts?: CommonDBOptions): Promise<number> {
+  async deleteByIds(table: string, ids: string[], opt?: CommonDBOptions): Promise<number> {
     if (!ids.length) return 0
 
     const client = await this.client()
@@ -123,7 +122,7 @@ export class MongoDB implements CommonDB {
 
   async runQuery<DBM extends SavedDBEntity, OUT = DBM>(
     q: DBQuery<any, DBM>,
-    opts?: CommonDBOptions,
+    opt?: CommonDBOptions,
   ): Promise<RunQueryResult<OUT>> {
     const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q)
@@ -136,7 +135,7 @@ export class MongoDB implements CommonDB {
     return { records: items.map(i => this.mapFromMongo(i as any)) }
   }
 
-  async runQueryCount(q: DBQuery, opts?: CommonDBOptions): Promise<number> {
+  async runQueryCount(q: DBQuery, opt?: CommonDBOptions): Promise<number> {
     const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q.select([]))
 
@@ -148,7 +147,7 @@ export class MongoDB implements CommonDB {
     return items.length
   }
 
-  async deleteByQuery(q: DBQuery, opts?: CommonDBOptions): Promise<number> {
+  async deleteByQuery(q: DBQuery, opt?: CommonDBOptions): Promise<number> {
     const client = await this.client()
     const { query } = dbQueryToMongoQuery(q)
 
@@ -160,27 +159,29 @@ export class MongoDB implements CommonDB {
     return deletedCount || 0
   }
 
-  streamQuery<DBM extends SavedDBEntity, OUT = DBM>(
-    q: DBQuery<any, DBM>,
-    opts?: CommonDBOptions,
-  ): Observable<OUT> {
+  streamQuery<DBM extends SavedDBEntity>(q: DBQuery<any, DBM>, opt?: CommonDBOptions): Readable {
     const { query, options } = dbQueryToMongoQuery(q)
 
-    const subj = new Subject<OUT>()
+    const transform = new Transform({
+      objectMode: true,
+      // read() {},
+      transform: (chunk, _encoding, cb) => {
+        cb(null, this.mapFromMongo(chunk))
+      },
+    })
 
     void this.client()
       .then(client => {
-        streamToObservable<MongoObject<OUT>>(client
+        client
           .db(this.cfg.db)
           .collection(q.table)
           .find(query, options)
-          .stream() as NodeJS.ReadableStream)
-          .pipe(map(i => this.mapFromMongo(i as any)))
-          .subscribe(subj)
+          .stream()
+          .pipe(transform)
       })
-      .catch(err => subj.error(err))
+      .catch(err => transform.emit('error', err))
 
-    return subj
+    return transform
   }
 
   async distinct<OUT = any>(
