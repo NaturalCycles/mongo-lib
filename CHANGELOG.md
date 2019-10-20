@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/NaturalCycles/mongo-lib/compare/v2.0.0...v2.0.1) (2019-10-20)
+
+
+### Bug Fixes
+
+* adapt to db-lib ([9223c1a](https://github.com/NaturalCycles/mongo-lib/commit/9223c1a))
+
 # [2.0.0](https://github.com/NaturalCycles/mongo-lib/compare/v1.1.5...v2.0.0) (2019-10-19)
 
 
