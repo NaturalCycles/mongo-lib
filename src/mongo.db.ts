@@ -8,9 +8,9 @@ import {
   SavedDBEntity,
 } from '@naturalcycles/db-lib'
 import { memo } from '@naturalcycles/js-lib'
-import { Debug } from '@naturalcycles/nodejs-lib'
+import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
-import { Readable, Transform } from 'stream'
+import { Transform } from 'stream'
 import { dbQueryToMongoQuery } from './query.util'
 
 export type MongoObject<T> = T & { _id: string }
@@ -159,12 +159,14 @@ export class MongoDB implements CommonDB {
     return deletedCount || 0
   }
 
-  streamQuery<DBM extends SavedDBEntity>(q: DBQuery<any, DBM>, opt?: CommonDBOptions): Readable {
+  streamQuery<DBM extends SavedDBEntity, OUT = DBM>(
+    q: DBQuery<any, DBM>,
+    opt?: CommonDBOptions,
+  ): ReadableTyped<OUT> {
     const { query, options } = dbQueryToMongoQuery(q)
 
     const transform = new Transform({
       objectMode: true,
-      // read() {},
       transform: (chunk, _encoding, cb) => {
         cb(null, this.mapFromMongo(chunk))
       },

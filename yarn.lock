@@ -465,14 +465,15 @@
     rimraf "^2.5.2"
 
 "@naturalcycles/db-lib@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/db-lib/-/db-lib-2.0.2.tgz#58a0118ef962af8beab9e083ea8905e224d4c196"
-  integrity sha512-y3iEmYkWUA1hIyWkG1Gy7xSKgsU+9wakBs7KxC1DdETWbkNaOiS86Ugtp01h1oQ5rYS84x6dcXvAGq55liRseg==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/db-lib/-/db-lib-2.1.0.tgz#3e7f5408ec3ab484a4932c514c16811925fef0a4"
+  integrity sha512-CF34t8h3X9qaxwGEMrFk2b3zTxvzlkMPm6Hm15pZeeLgPrWVIbgfaaHzoVXNQl7EO60U8JMFlGl+WeS5NyU/Jw==
   dependencies:
     "@naturalcycles/js-lib" "^8.2.1"
     "@naturalcycles/nodejs-lib" "^6.5.0"
     "@naturalcycles/time-lib" "^1.4.3"
     fs-extra "^8.1.0"
+    rxjs "^6.5.3"
     type-fest "^0.8.0"
 
 "@naturalcycles/dev-lib@^8.1.0":
@@ -531,9 +532,9 @@
     type-fest "^0.8.0"
 
 "@naturalcycles/nodejs-lib@^6.13.0", "@naturalcycles/nodejs-lib@^6.20.0", "@naturalcycles/nodejs-lib@^6.5.0":
-  version "6.25.0"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/nodejs-lib/-/nodejs-lib-6.25.0.tgz#2241239185cd6114d0374e153f19216edb520b39"
-  integrity sha512-REvYjYIgWPVIDopmpwpuoPsX8jLScNox+QrxT0Z28lZG+lsDDbHO1c3LpgvHhZplfRiYCFOGIEkN58jU1MebEA==
+  version "6.29.0"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/nodejs-lib/-/nodejs-lib-6.29.0.tgz#63195f8cf01cb2415e02f2f5ad00ef74605a0f50"
+  integrity sha512-6V60vIY0ChaYLTG8qpMYbci54m6mEdv9cp8MYuZwsbuUlHJUqbSH+2s1jjcOyoyGwnzPznkCMMkyGQQYGz4i3A==
   dependencies:
     "@hapi/joi" "^15.0.2"
     "@naturalcycles/js-lib" "^8.0.0"
@@ -678,12 +679,7 @@
     "@types/tough-cookie" "*"
     form-data "^2.5.0"
 
-"@types/hapi__joi@*":
-  version "16.0.1"
-  resolved "https://registry.yarnpkg.com/@types/hapi__joi/-/hapi__joi-16.0.1.tgz#ec227341ec7ce2091066cccebc3b14f6c527ba6b"
-  integrity sha512-U4I9Pfk4qH6TCXlg55qOc3F730QndZi86hGWlZHPHY7b3J+MCDIAO6EejbkaLWk7U15v+jn2J3GRVKD4ruhS2Q==
-
-"@types/hapi__joi@^15.0.1":
+"@types/hapi__joi@*", "@types/hapi__joi@15.0.4", "@types/hapi__joi@^15.0.1":
   version "15.0.4"
   resolved "https://registry.yarnpkg.com/@types/hapi__joi/-/hapi__joi-15.0.4.tgz#49e2e1e6da15ade0fdd6db4daf94aecb07bb391b"
   integrity sha512-VSS6zc7AIOdHVXmqKaGNPYl8eGrMvWi0R5pt3evJL3UdxO8XS28/XAkBXNyLQoymHxhMd4bF3o1U9mZkWDeN8w==
@@ -4658,7 +4654,7 @@ run-parallel@^1.1.9:
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.9.tgz#c9dd3a7cf9f4b2c4b6244e173a6ed866e61dd679"
   integrity sha512-DEqnSRTDw/Tc3FXf49zedI638Z9onwUotBMiUFKmrO2sdFKIbXamXGQ3Axd4qgphxKB4kw/qP1w5kTxnfU1B9Q==
 
-rxjs@^6.3.3, rxjs@^6.5.2:
+rxjs@^6.3.3, rxjs@^6.5.2, rxjs@^6.5.3:
   version "6.5.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.3.tgz#510e26317f4db91a7eb1de77d9dd9ba0a4899a3a"
   integrity sha512-wuYsAYYFdWTAnAaPoKGNhfpWwKZbJW+HgAJ+mImp+Epl7BG8oNWBCTyRM8gba9k4lk8BgWdoYm21Mo/RYhhbgA==
