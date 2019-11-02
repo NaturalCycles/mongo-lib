@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/NaturalCycles/mongo-lib/compare/v2.0.1...v3.0.0) (2019-11-02)
+
+
+### Features
+
+* adapt to db-lib@3 ([2bad78c](https://github.com/NaturalCycles/mongo-lib/commit/2bad78cba5a4e83df5505371a40e179d78bc46ea))
+
+
+### BREAKING CHANGES
+
+* ^^^
+
 ## [2.0.1](https://github.com/NaturalCycles/mongo-lib/compare/v2.0.0...v2.0.1) (2019-10-20)
 
 
