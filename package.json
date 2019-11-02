@@ -1,17 +1,20 @@
 {
   "name": "@naturalcycles/mongo-lib",
   "scripts": {},
+  "peerDependencies": {
+    "@naturalcycles/db-lib": ">=3.0.0"
+  },
   "dependencies": {
-    "@naturalcycles/db-lib": "^2.0.2",
-    "@naturalcycles/js-lib": "^8.6.1",
-    "@naturalcycles/nodejs-lib": "^6.13.0",
-    "@types/mongodb": "^3.3.0",
+    "@naturalcycles/db-lib": "^3.0.0",
+    "@naturalcycles/js-lib": "^8.9.0",
+    "@naturalcycles/nodejs-lib": "^7.1.1",
+    "@types/mongodb": "^3.3.8",
     "chalk": "^2.4.2",
     "mongodb": "^3.3.0"
   },
   "devDependencies": {
-    "@naturalcycles/dev-lib": "^8.1.0",
-    "@types/node": "^12.7.2",
+    "@naturalcycles/dev-lib": "^9.0.2",
+    "@types/node": "^12.12.5",
     "dotenv": "^8.1.0",
     "jest": "^24.9.0"
   },
