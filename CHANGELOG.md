@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/NaturalCycles/mongo-lib/compare/v3.0.0...v3.1.0) (2019-11-03)
+
+
+### Features
+
+* implement getTables() ([3ec447a](https://github.com/NaturalCycles/mongo-lib/commit/3ec447a04fc1e64468aafd39ac926ab6e8f66b47))
+
 # [3.0.0](https://github.com/NaturalCycles/mongo-lib/compare/v2.0.1...v3.0.0) (2019-11-02)
 
 
