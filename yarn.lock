@@ -465,9 +465,9 @@
     rimraf "^2.5.2"
 
 "@naturalcycles/db-lib@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/db-lib/-/db-lib-3.0.0.tgz#7ea9d7ce1aae5808e9ac7a05f81ebc2a4d2d57cb"
-  integrity sha512-5wdJAU2es7vppa8E4LLf/lfRHW7KlICOUeI9EklJeymTkiL2r9d8lmQw5yEdGLQHiSkx6cIEtyrUeVBSDT/FdQ==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/db-lib/-/db-lib-3.1.0.tgz#b46d9e50d7dfa186eeb19c29d4996402579773d1"
+  integrity sha512-5u21agN21wkhCRpodgIPZlQ+DD30vGdawtI281h1vkxlCmqaVjDdzWWidIZNETh80zIJBU4s9MZLp3+WXoU60A==
   dependencies:
     "@naturalcycles/js-lib" "^8.2.1"
     "@naturalcycles/nodejs-lib" "^7.0.0"
@@ -523,16 +523,16 @@
     yargs "^14.0.0"
 
 "@naturalcycles/js-lib@^8.0.0", "@naturalcycles/js-lib@^8.2.1", "@naturalcycles/js-lib@^8.4.0", "@naturalcycles/js-lib@^8.9.0":
-  version "8.9.0"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/js-lib/-/js-lib-8.9.0.tgz#802cdc34cb1f59895958dbed9565c832e50b2dd6"
-  integrity sha512-3lWviRyGxucrH8Z1A2j7mO4hIy+qJkt2+IOac3WkLVaxpXNYCe7f+yrliSNo5tbNts6r2oH11VCj/uEI1r6J0w==
+  version "8.11.0"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/js-lib/-/js-lib-8.11.0.tgz#7e0d54bd866d7860d8da50c7d33b78d33f7b1ff8"
+  integrity sha512-nH79VF8v8h0xJukobP3HO+gI/mfZcwPhyTVBeuiO8R148s82rW7VJNsFZN43afayslA2+NMxK4imBUwKnA//yw==
   dependencies:
     type-fest "^0.8.0"
 
 "@naturalcycles/nodejs-lib@^7.0.0", "@naturalcycles/nodejs-lib@^7.1.1":
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/nodejs-lib/-/nodejs-lib-7.1.1.tgz#e70d34e5eaa233ed275457e894c8e303651c0ae3"
-  integrity sha512-ZyD5jTZb+OYCmnALqIoSseCObso49N5wE06GuRNvZQCiUC9p/FZAzQ2mcf7FkCBPkoJ2F76U8IAxfCl/484iPQ==
+  version "7.6.1"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/nodejs-lib/-/nodejs-lib-7.6.1.tgz#ff997776a4adfd6792ccb483d353fcbe6d527b01"
+  integrity sha512-SeH4mDVogrxRE8M6K6qLxizP2aL/zisiWVq3y9qP3jsdDatfdl3XcsTENtT+3jvrwYEnDTY9osFcLUk5+uT8eg==
   dependencies:
     "@hapi/joi" "^15.0.2"
     "@naturalcycles/js-lib" "^8.0.0"

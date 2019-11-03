@@ -21,6 +21,11 @@ export interface MongoDBCfg {
   options?: MongoClientOptions
 }
 
+interface MongoCollectionObject {
+  name: string
+  type: string
+}
+
 const log = Debug('nc:mongo-lib')
 
 export class MongoDB implements CommonDB {
@@ -56,6 +61,21 @@ export class MongoDB implements CommonDB {
   protected mapFromMongo<DBM extends SavedDBEntity>(item: MongoObject<DBM>): DBM {
     const { _id, ...dbm } = { ...item, id: item._id }
     return dbm as any
+  }
+
+  async getTables(): Promise<string[]> {
+    const client = await this.client()
+    const colObjects: MongoCollectionObject[] = await client
+      .db(this.cfg.db)
+      .listCollections(
+        {},
+        {
+          nameOnly: true,
+          // authorizedCollections: true,
+        },
+      )
+      .toArray()
+    return colObjects.map(c => c.name)
   }
 
   async saveBatch<DBM extends SavedDBEntity>(
