@@ -1,7 +1,9 @@
 import {
   CommonDB,
+  CommonDBCreateOptions,
   CommonDBOptions,
   CommonDBSaveOptions,
+  CommonSchema,
   DBQuery,
   ObjectWithId,
   RunQueryResult,
@@ -77,6 +79,16 @@ export class MongoDB implements CommonDB {
       .toArray()
     return colObjects.map(c => c.name)
   }
+
+  async getTableSchema<DBM extends SavedDBEntity>(table: string): Promise<CommonSchema<DBM>> {
+    return {
+      table,
+      fields: [],
+    }
+  }
+
+  // no-op
+  async createTable(schema: CommonSchema, opt?: CommonDBCreateOptions): Promise<void> {}
 
   async saveBatch<DBM extends SavedDBEntity>(
     table: string,
