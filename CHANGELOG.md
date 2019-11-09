@@ -1,3 +1,15 @@
+# [3.2.0](https://github.com/NaturalCycles/mongo-lib/compare/v3.1.0...v3.2.0) (2019-11-09)
+
+
+### Bug Fixes
+
+* adapt to db-lib ([e0ec661](https://github.com/NaturalCycles/mongo-lib/commit/e0ec661e9702ed5528ac0fcbebe840b1e8ac1d52))
+
+
+### Features
+
+* backup.script.ts ([58fb858](https://github.com/NaturalCycles/mongo-lib/commit/58fb85832fc9760de2fee3614b5d4ddd0fc08bda))
+
 # [3.1.0](https://github.com/NaturalCycles/mongo-lib/compare/v3.0.0...v3.1.0) (2019-11-03)
 
 
