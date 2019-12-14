@@ -24,17 +24,14 @@ export function dbQueryToMongoQuery(
   const options = {} as FindOneOptions
 
   // filter
-  const query = dbQuery._filters.reduce(
-    (q, f) => {
-      const fname = FNAME_MAP[f.name] || f.name
-      q[fname] = {
-        ...q[fname], // in case there is a "between" query
-        [OP_MAP[f.op] || f.op]: f.val,
-      }
-      return q
-    },
-    {} as FilterQuery<any>,
-  )
+  const query = dbQuery._filters.reduce((q, f) => {
+    const fname = FNAME_MAP[f.name] || f.name
+    q[fname] = {
+      ...q[fname], // in case there is a "between" query
+      [OP_MAP[f.op] || f.op]: f.val,
+    }
+    return q
+  }, {} as FilterQuery<any>)
 
   // order
   options.sort = dbQuery._orders.reduce((map, ord) => {
