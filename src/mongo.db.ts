@@ -183,10 +183,7 @@ export class MongoDB implements CommonDB {
     const client = await this.client()
     const { query } = dbQueryToMongoQuery(q)
 
-    const { deletedCount } = await client
-      .db(this.cfg.db)
-      .collection(q.table)
-      .deleteMany(query)
+    const { deletedCount } = await client.db(this.cfg.db).collection(q.table).deleteMany(query)
 
     return deletedCount || 0
   }
@@ -206,12 +203,7 @@ export class MongoDB implements CommonDB {
 
     void this.client()
       .then(client => {
-        client
-          .db(this.cfg.db)
-          .collection(q.table)
-          .find(query, options)
-          .stream()
-          .pipe(transform)
+        client.db(this.cfg.db).collection(q.table).find(query, options).stream().pipe(transform)
       })
       .catch(err => transform.emit('error', err))
 
@@ -224,9 +216,6 @@ export class MongoDB implements CommonDB {
     query: FilterQuery<any> = {},
   ): Promise<OUT[]> {
     const client = await this.client()
-    return await client
-      .db(this.cfg.db)
-      .collection(table)
-      .distinct(key, query)
+    return await client.db(this.cfg.db).collection(table).distinct(key, query)
   }
 }
