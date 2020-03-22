@@ -1,3 +1,10 @@
+# [3.3.0](https://github.com/NaturalCycles/mongo-lib/compare/v3.2.1...v3.3.0) (2020-03-22)
+
+
+### Features
+
+* deps ([d3385bc](https://github.com/NaturalCycles/mongo-lib/commit/d3385bc7bc328c129bfabb228f5d4fbb7bba41c4))
+
 ## [3.2.1](https://github.com/NaturalCycles/mongo-lib/compare/v3.2.0...v3.2.1) (2019-12-14)
 
 
