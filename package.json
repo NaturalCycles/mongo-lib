@@ -2,10 +2,10 @@
   "name": "@naturalcycles/mongo-lib",
   "scripts": {},
   "peerDependencies": {
-    "@naturalcycles/db-lib": ">=3.0.0"
+    "@naturalcycles/db-lib": ">=4.0.0"
   },
   "dependencies": {
-    "@naturalcycles/db-lib": "^3.0.0",
+    "@naturalcycles/db-lib": "^4.0.0",
     "@naturalcycles/js-lib": "^10.1.0",
     "@naturalcycles/nodejs-lib": "^9.1.1",
     "@types/mongodb": "^3.3.8",

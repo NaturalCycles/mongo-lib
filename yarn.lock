@@ -576,10 +576,10 @@
     mkdirp "^0.5.1"
     rimraf "^2.5.2"
 
-"@naturalcycles/db-lib@^3.0.0":
-  version "3.18.3"
-  resolved "https://registry.yarnpkg.com/@naturalcycles/db-lib/-/db-lib-3.18.3.tgz#8490d6f335172f65cdcb4482b4fda4a02f4ba130"
-  integrity sha512-Xm9Pd+0gFzOgKt2AyckDhDZNhcH0+dIMXZwrRnGD7RexuPi+28k/jE9j7brDS8Bvral4ymHuIL9Yx8r/r50loA==
+"@naturalcycles/db-lib@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@naturalcycles/db-lib/-/db-lib-4.0.0.tgz#f204cffc469c463e563e819de1c2ae879682fbe9"
+  integrity sha512-B3OKC5mIcPT/JWw9cPdPdKyx5M5OhS6CfnSyQkD1+6Ao1JG2oY8e0krvQNKJh8U98rutoBNbTVh0rsPz0JDeuQ==
   dependencies:
     "@naturalcycles/js-lib" "^10.0.0"
     "@naturalcycles/nodejs-lib" "^9.1.1"
