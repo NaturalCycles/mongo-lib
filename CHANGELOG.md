@@ -1,3 +1,10 @@
+## [3.3.3](https://github.com/NaturalCycles/mongo-lib/compare/v3.3.2...v3.3.3) (2020-04-01)
+
+
+### Bug Fixes
+
+* ping() ([29e76c1](https://github.com/NaturalCycles/mongo-lib/commit/29e76c12d9af13e23ebde1cf4fc310eecdbcf1f9))
+
 ## [3.3.2](https://github.com/NaturalCycles/mongo-lib/compare/v3.3.1...v3.3.2) (2020-03-31)
 
 
