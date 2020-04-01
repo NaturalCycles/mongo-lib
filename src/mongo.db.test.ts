@@ -1,4 +1,4 @@
-import { TEST_TABLE } from '@naturalcycles/db-lib'
+import { TEST_TABLE } from '@naturalcycles/db-lib/dist/testing'
 import { MongoDB } from './mongo.db'
 
 test('test1', async () => {
