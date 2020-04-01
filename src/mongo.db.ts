@@ -53,6 +53,10 @@ export class MongoDB implements CommonDB {
     log(`close`)
   }
 
+  async ping(): Promise<void> {
+    await this.client()
+  }
+
   async resetCache(): Promise<void> {}
 
   protected mapToMongo<DBM extends ObjectWithId>(dbm: DBM): MongoObject<DBM> {

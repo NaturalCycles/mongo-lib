@@ -1,6 +1,6 @@
 /*
 
-DEBUG=nc* yarn tsn ./scripts/backup.script.ts
+DEBUG=nc* yarn tsn backup.script.ts
 
  */
 
