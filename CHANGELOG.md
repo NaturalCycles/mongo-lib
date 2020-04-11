@@ -1,3 +1,10 @@
+## [3.3.4](https://github.com/NaturalCycles/mongo-lib/compare/v3.3.3...v3.3.4) (2020-04-11)
+
+
+### Bug Fixes
+
+* projection query without 'id' case ([1ef1f6f](https://github.com/NaturalCycles/mongo-lib/commit/1ef1f6fd7a1df4010945fe23f3ab871e851baf50))
+
 ## [3.3.3](https://github.com/NaturalCycles/mongo-lib/compare/v3.3.2...v3.3.3) (2020-04-01)
 
 
