@@ -9,7 +9,7 @@ import {
   RunQueryResult,
   SavedDBEntity,
 } from '@naturalcycles/db-lib'
-import { memo } from '@naturalcycles/js-lib'
+import { memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
 import { Transform } from 'stream'
@@ -168,7 +168,15 @@ export class MongoDB implements CommonDB {
       .collection(q.table)
       .find(query, options)
       .toArray()
-    return { records: items.map(i => this.mapFromMongo(i as any)) }
+
+    let records = items.map(i => this.mapFromMongo(i as any))
+
+    if (q._selectedFieldNames && !q._selectedFieldNames.includes('id')) {
+      // special case
+      records = records.map(r => _omit(r, ['id']))
+    }
+
+    return { records }
   }
 
   async runQueryCount(q: DBQuery, opt?: CommonDBOptions): Promise<number> {
