@@ -9,7 +9,7 @@ import {
   RunQueryResult,
   SavedDBEntity,
 } from '@naturalcycles/db-lib'
-import { memo, _omit } from '@naturalcycles/js-lib'
+import { _Memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
 import { Transform } from 'stream'
@@ -33,7 +33,7 @@ const log = Debug('nc:mongo-lib')
 export class MongoDB implements CommonDB {
   constructor(public cfg: MongoDBCfg) {}
 
-  @memo()
+  @_Memo()
   async client(): Promise<MongoClient> {
     const client = new MongoClient(this.cfg.uri, {
       useNewUrlParser: true,
