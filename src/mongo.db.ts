@@ -11,8 +11,9 @@ import {
 } from '@naturalcycles/db-lib'
 import { _Memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
-import { FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
+import { CommonOptions, FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
 import { Transform } from 'stream'
+import { MongoDBTransaction } from './mongoDBTransaction'
 import { dbQueryToMongoQuery } from './query.util'
 
 export type MongoObject<T> = T & { _id: string }
@@ -27,6 +28,9 @@ interface MongoCollectionObject {
   name: string
   type: string
 }
+
+export interface MongoDBSaveOptions extends CommonDBSaveOptions, CommonOptions {}
+export interface MongoDBOptions extends CommonDBOptions, CommonOptions {}
 
 const log = Debug('nc:mongo-lib')
 
@@ -97,7 +101,7 @@ export class MongoDB implements CommonDB {
   async saveBatch<DBM extends SavedDBEntity>(
     table: string,
     dbms: DBM[],
-    opt?: CommonDBSaveOptions,
+    opt?: MongoDBSaveOptions,
   ): Promise<void> {
     if (!dbms.length) return
 
@@ -115,6 +119,7 @@ export class MongoDB implements CommonDB {
             upsert: true,
           },
         })),
+        opt,
       )
 
     // console.log(res)
@@ -140,18 +145,21 @@ export class MongoDB implements CommonDB {
     return items.map(i => this.mapFromMongo(i))
   }
 
-  async deleteByIds(table: string, ids: string[], opt?: CommonDBOptions): Promise<number> {
+  async deleteByIds(table: string, ids: string[], opt?: MongoDBOptions): Promise<number> {
     if (!ids.length) return 0
 
     const client = await this.client()
     const { deletedCount } = await client
       .db(this.cfg.db)
       .collection(table)
-      .deleteMany({
-        _id: {
-          $in: ids,
+      .deleteMany(
+        {
+          _id: {
+            $in: ids,
+          },
         },
-      })
+        opt,
+      )
 
     return deletedCount || 0
   }
@@ -229,5 +237,9 @@ export class MongoDB implements CommonDB {
   ): Promise<OUT[]> {
     const client = await this.client()
     return await client.db(this.cfg.db).collection(table).distinct(key, query)
+  }
+
+  transaction(): MongoDBTransaction {
+    return new MongoDBTransaction(this)
   }
 }

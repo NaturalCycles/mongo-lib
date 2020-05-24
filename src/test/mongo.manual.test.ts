@@ -9,7 +9,7 @@ import {
   TEST_TABLE,
 } from '@naturalcycles/db-lib/dist/testing/test.model'
 import { requireEnvKeys } from '@naturalcycles/nodejs-lib'
-import { MongoDB } from '../../mongo.db'
+import { MongoDB } from '../mongo.db'
 
 jest.setTimeout(60000)
 require('dotenv').config()
