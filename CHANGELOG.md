@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/NaturalCycles/mongo-lib/compare/v3.3.6...v3.4.0) (2020-05-24)
+
+
+### Features
+
+* implement CommonDB@6 (transactions) ([ee3a087](https://github.com/NaturalCycles/mongo-lib/commit/ee3a0875db1098b1e9afc4c87539e99698f423fd))
+
 ## [3.3.6](https://github.com/NaturalCycles/mongo-lib/compare/v3.3.5...v3.3.6) (2020-04-25)
 
 
