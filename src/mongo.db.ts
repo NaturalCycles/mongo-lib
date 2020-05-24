@@ -7,7 +7,6 @@ import {
   DBQuery,
   ObjectWithId,
   RunQueryResult,
-  SavedDBEntity,
 } from '@naturalcycles/db-lib'
 import { _Memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
@@ -68,7 +67,7 @@ export class MongoDB implements CommonDB {
     return m as any
   }
 
-  protected mapFromMongo<DBM extends SavedDBEntity>(item: MongoObject<DBM>): DBM {
+  protected mapFromMongo<DBM extends ObjectWithId>(item: MongoObject<DBM>): DBM {
     const { _id, ...dbm } = { ...item, id: item._id }
     return dbm as any
   }
@@ -88,7 +87,7 @@ export class MongoDB implements CommonDB {
     return colObjects.map(c => c.name)
   }
 
-  async getTableSchema<DBM extends SavedDBEntity>(table: string): Promise<CommonSchema<DBM>> {
+  async getTableSchema<DBM extends ObjectWithId>(table: string): Promise<CommonSchema<DBM>> {
     return {
       table,
       fields: [],
@@ -98,7 +97,7 @@ export class MongoDB implements CommonDB {
   // no-op
   async createTable(schema: CommonSchema, opt?: CommonDBCreateOptions): Promise<void> {}
 
-  async saveBatch<DBM extends SavedDBEntity>(
+  async saveBatch<DBM extends ObjectWithId>(
     table: string,
     dbms: DBM[],
     opt?: MongoDBSaveOptions,
@@ -125,7 +124,7 @@ export class MongoDB implements CommonDB {
     // console.log(res)
   }
 
-  async getByIds<DBM extends SavedDBEntity>(
+  async getByIds<DBM extends ObjectWithId>(
     table: string,
     ids: string[],
     opt?: CommonDBOptions,
@@ -164,8 +163,8 @@ export class MongoDB implements CommonDB {
     return deletedCount || 0
   }
 
-  async runQuery<DBM extends SavedDBEntity, OUT = DBM>(
-    q: DBQuery<any, DBM>,
+  async runQuery<DBM extends ObjectWithId, OUT = DBM>(
+    q: DBQuery<DBM>,
     opt?: CommonDBOptions,
   ): Promise<RunQueryResult<OUT>> {
     const client = await this.client()
@@ -208,8 +207,8 @@ export class MongoDB implements CommonDB {
     return deletedCount || 0
   }
 
-  streamQuery<DBM extends SavedDBEntity, OUT = DBM>(
-    q: DBQuery<any, DBM>,
+  streamQuery<DBM extends ObjectWithId, OUT = DBM>(
+    q: DBQuery<DBM>,
     opt?: CommonDBOptions,
   ): ReadableTyped<OUT> {
     const { query, options } = dbQueryToMongoQuery(q)
