@@ -1,10 +1,12 @@
 import {
+  BaseCommonDB,
   CommonDB,
-  CommonDBCreateOptions,
   CommonDBOptions,
   CommonDBSaveOptions,
   CommonSchema,
   DBQuery,
+  DBTransaction,
+  mergeDBOperations,
   ObjectWithId,
   RunQueryResult,
 } from '@naturalcycles/db-lib'
@@ -12,7 +14,6 @@ import { _Memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { CommonOptions, FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
 import { Transform } from 'stream'
-import { MongoDBTransaction } from './mongoDBTransaction'
 import { dbQueryToMongoQuery } from './query.util'
 
 export type MongoObject<T> = T & { _id: string }
@@ -33,8 +34,10 @@ export interface MongoDBOptions extends CommonDBOptions, CommonOptions {}
 
 const log = Debug('nc:mongo-lib')
 
-export class MongoDB implements CommonDB {
-  constructor(public cfg: MongoDBCfg) {}
+export class MongoDB extends BaseCommonDB implements CommonDB {
+  constructor(public cfg: MongoDBCfg) {
+    super()
+  }
 
   @_Memo()
   async client(): Promise<MongoClient> {
@@ -60,16 +63,14 @@ export class MongoDB implements CommonDB {
     await this.client()
   }
 
-  async resetCache(): Promise<void> {}
-
-  protected mapToMongo<DBM extends ObjectWithId>(dbm: DBM): MongoObject<DBM> {
-    const { id, ...m } = { ...dbm, _id: dbm.id }
+  protected mapToMongo<ROW extends ObjectWithId>(row: ROW): MongoObject<ROW> {
+    const { id, ...m } = { ...row, _id: row.id }
     return m as any
   }
 
-  protected mapFromMongo<DBM extends ObjectWithId>(item: MongoObject<DBM>): DBM {
-    const { _id, ...dbm } = { ...item, id: item._id }
-    return dbm as any
+  protected mapFromMongo<ROW extends ObjectWithId>(item: MongoObject<ROW>): ROW {
+    const { _id, ...row } = { ...item, id: item._id }
+    return row as any
   }
 
   async getTables(): Promise<string[]> {
@@ -87,34 +88,31 @@ export class MongoDB implements CommonDB {
     return colObjects.map(c => c.name)
   }
 
-  async getTableSchema<DBM extends ObjectWithId>(table: string): Promise<CommonSchema<DBM>> {
+  async getTableSchema<ROW extends ObjectWithId>(table: string): Promise<CommonSchema<ROW>> {
     return {
       table,
       fields: [],
     }
   }
 
-  // no-op
-  async createTable(schema: CommonSchema, opt?: CommonDBCreateOptions): Promise<void> {}
-
-  async saveBatch<DBM extends ObjectWithId>(
+  async saveBatch<ROW extends ObjectWithId>(
     table: string,
-    dbms: DBM[],
+    rows: ROW[],
     opt?: MongoDBSaveOptions,
   ): Promise<void> {
-    if (!dbms.length) return
+    if (!rows.length) return
 
     const client = await this.client()
     await client
       .db(this.cfg.db)
       .collection(table)
       .bulkWrite(
-        dbms.map(dbm => ({
+        rows.map(r => ({
           replaceOne: {
             filter: {
-              _id: dbm.id,
+              _id: r.id,
             },
-            replacement: this.mapToMongo(dbm),
+            replacement: this.mapToMongo(r),
             upsert: true,
           },
         })),
@@ -124,15 +122,15 @@ export class MongoDB implements CommonDB {
     // console.log(res)
   }
 
-  async getByIds<DBM extends ObjectWithId>(
+  async getByIds<ROW extends ObjectWithId>(
     table: string,
     ids: string[],
     opt?: CommonDBOptions,
-  ): Promise<DBM[]> {
+  ): Promise<ROW[]> {
     if (!ids.length) return []
 
     const client = await this.client()
-    const items: MongoObject<DBM>[] = await client
+    const items: MongoObject<ROW>[] = await client
       .db(this.cfg.db)
       .collection(table)
       .find({
@@ -163,8 +161,8 @@ export class MongoDB implements CommonDB {
     return deletedCount || 0
   }
 
-  async runQuery<DBM extends ObjectWithId, OUT = DBM>(
-    q: DBQuery<DBM>,
+  async runQuery<ROW extends ObjectWithId, OUT = ROW>(
+    q: DBQuery<ROW>,
     opt?: CommonDBOptions,
   ): Promise<RunQueryResult<OUT>> {
     const client = await this.client()
@@ -176,14 +174,14 @@ export class MongoDB implements CommonDB {
       .find(query, options)
       .toArray()
 
-    let records = items.map(i => this.mapFromMongo(i as any))
+    let rows = items.map(i => this.mapFromMongo(i as any))
 
     if (q._selectedFieldNames && !q._selectedFieldNames.includes('id')) {
       // special case
-      records = records.map(r => _omit(r, ['id']))
+      rows = rows.map(r => _omit(r, ['id']))
     }
 
-    return { records }
+    return { rows }
   }
 
   async runQueryCount(q: DBQuery, opt?: CommonDBOptions): Promise<number> {
@@ -207,8 +205,8 @@ export class MongoDB implements CommonDB {
     return deletedCount || 0
   }
 
-  streamQuery<DBM extends ObjectWithId, OUT = DBM>(
-    q: DBQuery<DBM>,
+  streamQuery<ROW extends ObjectWithId, OUT = ROW>(
+    q: DBQuery<ROW>,
     opt?: CommonDBOptions,
   ): ReadableTyped<OUT> {
     const { query, options } = dbQueryToMongoQuery(q)
@@ -238,7 +236,30 @@ export class MongoDB implements CommonDB {
     return await client.db(this.cfg.db).collection(table).distinct(key, query)
   }
 
-  transaction(): MongoDBTransaction {
-    return new MongoDBTransaction(this)
+  /**
+   * https://docs.mongodb.com/manual/core/transactions/
+   */
+  async commitTransaction(tx: DBTransaction, opt?: CommonDBSaveOptions): Promise<void> {
+    const client = await this.client()
+    const session = await client.startSession()
+    const ops = mergeDBOperations(tx.ops)
+
+    try {
+      await session.withTransaction(async () => {
+        for await (const op of ops) {
+          if (op.type === 'saveBatch') {
+            // Important: You must pass the session to the operations
+            await this.saveBatch(op.table, op.rows, { ...opt, session })
+          } else if (op.type === 'deleteByIds') {
+            await this.deleteByIds(op.table, op.ids, { ...opt, session })
+          } else {
+            throw new Error(`DBOperation not supported: ${op!.type}`)
+          }
+        }
+      })
+    } finally {
+      await session.endSession()
+    }
+    // todo: is catch/revert needed?
   }
 }

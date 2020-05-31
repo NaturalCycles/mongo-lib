@@ -1,5 +1,4 @@
-import { CommonDao } from '@naturalcycles/db-lib'
-import { CommonDaoLogLevel } from '@naturalcycles/db-lib/dist/common.dao'
+import { CommonDao, CommonDaoLogLevel } from '@naturalcycles/db-lib'
 import { runCommonDaoTest, runCommonDBTest } from '@naturalcycles/db-lib/dist/testing'
 import {
   createTestItemsBM,
