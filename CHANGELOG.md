@@ -1,3 +1,10 @@
+## [3.4.2](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.1...v3.4.2) (2020-05-31)
+
+
+### Bug Fixes
+
+* adapt to db-lib@7 ([5f26c50](https://github.com/NaturalCycles/mongo-lib/commit/5f26c509fd4a58c7688ab66570e3fbd9fcc37c83))
+
 ## [3.4.1](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.0...v3.4.1) (2020-05-24)
 
 
