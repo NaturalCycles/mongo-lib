@@ -7,7 +7,7 @@
   "dependencies": {
     "@naturalcycles/db-lib": "^7.0.0",
     "@naturalcycles/js-lib": "^13.0.0",
-    "@naturalcycles/nodejs-lib": "^10.1.0",
+    "@naturalcycles/nodejs-lib": "^11.1.0",
     "@types/mongodb": "^3.3.8",
     "mongodb": "^3.3.0"
   },
