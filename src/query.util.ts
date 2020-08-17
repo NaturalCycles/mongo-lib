@@ -1,4 +1,4 @@
-import { DBQuery, DBQueryFilterOperator } from '@naturalcycles/db-lib'
+import { DBQuery, DBQueryFilterOperator, ObjectWithId } from '@naturalcycles/db-lib'
 import { FilterQuery, FindOneOptions } from 'mongodb'
 
 // Map DBQueryFilterOp to Mongo "Comparison query operator"
@@ -15,13 +15,13 @@ const FNAME_MAP: Record<string, string> = {
   id: '_id',
 }
 
-export function dbQueryToMongoQuery(
-  dbQuery: DBQuery,
+export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
+  dbQuery: DBQuery<ROW>,
 ): {
   query: FilterQuery<any>
-  options: FindOneOptions
+  options: FindOneOptions<any>
 } {
-  const options = {} as FindOneOptions
+  const options = {} as FindOneOptions<any>
 
   // filter
   const query = dbQuery._filters.reduce((q, f) => {
