@@ -23,7 +23,10 @@ afterAll(async () => {
   await mongoDB.close()
 })
 
-describe('runCommonDBTest', () => runCommonDBTest(mongoDB))
+describe('runCommonDBTest', () =>
+  runCommonDBTest(mongoDB, {
+    bufferSupport: false,
+  }))
 
 describe('runCommonDaoTest', () => runCommonDaoTest(mongoDB))
 
