@@ -1,3 +1,10 @@
+## [3.4.5](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.4...v3.4.5) (2020-10-12)
+
+
+### Bug Fixes
+
+* support db-lib@8 ([5828cd6](https://github.com/NaturalCycles/mongo-lib/commit/5828cd6e4ef00bbb6930d90d11b11e4ddeebe716))
+
 ## [3.4.4](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.3...v3.4.4) (2020-08-17)
 
 
