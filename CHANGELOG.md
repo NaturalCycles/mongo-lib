@@ -1,3 +1,10 @@
+## [3.4.6](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.5...v3.4.6) (2020-10-25)
+
+
+### Bug Fixes
+
+* adapt to recent db-lib (OP_MAP) ([3cab6d9](https://github.com/NaturalCycles/mongo-lib/commit/3cab6d95ff01213782a8380cdfd8d0bde71a182d))
+
 ## [3.4.5](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.4...v3.4.5) (2020-10-12)
 
 
