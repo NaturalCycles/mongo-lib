@@ -1,14 +1,16 @@
 import { DBQuery, DBQueryFilterOperator, ObjectWithId } from '@naturalcycles/db-lib'
-import { FilterQuery, FindOneOptions } from 'mongodb'
+import { FilterQuery, FindOneOptions, QuerySelector } from 'mongodb'
 
 // Map DBQueryFilterOp to Mongo "Comparison query operator"
-const OP_MAP: Record<DBQueryFilterOperator, string> = {
-  '=': '$eq',
+const OP_MAP: Partial<Record<DBQueryFilterOperator, keyof QuerySelector<any>>> = {
+  '==': '$eq',
   '<': '$lt',
   '<=': '$lte',
   '>': '$gt',
   '>=': '$gte',
   in: '$in',
+  'not-in': '$nin',
+  // todo: array-contains, array-contains-any are not supported currently
 }
 
 const FNAME_MAP: Record<string, string> = {
