@@ -161,14 +161,14 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return deletedCount || 0
   }
 
-  async runQuery<ROW extends ObjectWithId, OUT = ROW>(
+  async runQuery<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
     opt?: CommonDBOptions,
-  ): Promise<RunQueryResult<OUT>> {
+  ): Promise<RunQueryResult<ROW>> {
     const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q)
 
-    const items: MongoObject<OUT>[] = await client
+    const items: MongoObject<ROW>[] = await client
       .db(this.cfg.db)
       .collection(q.table)
       .find(query, options)
@@ -184,7 +184,10 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return { rows }
   }
 
-  async runQueryCount(q: DBQuery, opt?: CommonDBOptions): Promise<number> {
+  async runQueryCount<ROW extends ObjectWithId>(
+    q: DBQuery<ROW>,
+    opt?: CommonDBOptions,
+  ): Promise<number> {
     const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q.select([]))
 
@@ -196,7 +199,10 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return items.length
   }
 
-  async deleteByQuery(q: DBQuery, opt?: CommonDBOptions): Promise<number> {
+  async deleteByQuery<ROW extends ObjectWithId>(
+    q: DBQuery<ROW>,
+    opt?: CommonDBOptions,
+  ): Promise<number> {
     const client = await this.client()
     const { query } = dbQueryToMongoQuery(q)
 
@@ -205,10 +211,10 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return deletedCount || 0
   }
 
-  streamQuery<ROW extends ObjectWithId, OUT = ROW>(
+  streamQuery<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
     opt?: CommonDBOptions,
-  ): ReadableTyped<OUT> {
+  ): ReadableTyped<ROW> {
     const { query, options } = dbQueryToMongoQuery(q)
 
     const transform = new Transform({
@@ -227,11 +233,11 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return transform
   }
 
-  async distinct<OUT = any>(
+  async distinct<ROW = any>(
     table: string,
     key: string,
     query: FilterQuery<any> = {},
-  ): Promise<OUT[]> {
+  ): Promise<ROW[]> {
     const client = await this.client()
     return await client.db(this.cfg.db).collection(table).distinct(key, query)
   }
