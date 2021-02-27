@@ -1,3 +1,10 @@
+## [3.4.8](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.7...v3.4.8) (2021-02-27)
+
+
+### Bug Fixes
+
+* deps ([173079f](https://github.com/NaturalCycles/mongo-lib/commit/173079ff5c149436a910b167c4e8c18d1f9274c7))
+
 ## [3.4.7](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.6...v3.4.7) (2020-11-05)
 
 
