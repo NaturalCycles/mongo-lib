@@ -1,3 +1,10 @@
+## [3.4.9](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.8...v3.4.9) (2021-05-22)
+
+
+### Bug Fixes
+
+* deps, eslint ([1f21858](https://github.com/NaturalCycles/mongo-lib/commit/1f21858e646130a0121e52982b05142329da2bec))
+
 ## [3.4.8](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.7...v3.4.8) (2021-02-27)
 
 
