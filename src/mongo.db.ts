@@ -64,7 +64,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
   }
 
   protected mapToMongo<ROW extends ObjectWithId>(row: ROW): MongoObject<ROW> {
-    const { id, ...m } = { ...row, _id: row.id }
+    const { id: _, ...m } = { ...row, _id: row.id }
     return m as any
   }
 
@@ -125,7 +125,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
   async getByIds<ROW extends ObjectWithId>(
     table: string,
     ids: string[],
-    opt?: CommonDBOptions,
+    _opt?: CommonDBOptions,
   ): Promise<ROW[]> {
     if (!ids.length) return []
 
@@ -163,7 +163,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
   async runQuery<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
-    opt?: CommonDBOptions,
+    _opt?: CommonDBOptions,
   ): Promise<RunQueryResult<ROW>> {
     const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q)
@@ -186,12 +186,12 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
   async runQueryCount<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
-    opt?: CommonDBOptions,
+    _opt?: CommonDBOptions,
   ): Promise<number> {
     const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q.select([]))
 
-    const items: MongoObject<{}>[] = await client
+    const items: MongoObject<any>[] = await client
       .db(this.cfg.db)
       .collection(q.table)
       .find(query, options)
@@ -201,7 +201,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
   async deleteByQuery<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
-    opt?: CommonDBOptions,
+    _opt?: CommonDBOptions,
   ): Promise<number> {
     const client = await this.client()
     const { query } = dbQueryToMongoQuery(q)
@@ -213,7 +213,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
   streamQuery<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
-    opt?: CommonDBOptions,
+    _opt?: CommonDBOptions,
   ): ReadableTyped<ROW> {
     const { query, options } = dbQueryToMongoQuery(q)
 
@@ -247,7 +247,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
    */
   async commitTransaction(tx: DBTransaction, opt?: CommonDBSaveOptions): Promise<void> {
     const client = await this.client()
-    const session = await client.startSession()
+    const session = client.startSession()
     const ops = mergeDBOperations(tx.ops)
 
     try {
@@ -259,12 +259,12 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
           } else if (op.type === 'deleteByIds') {
             await this.deleteByIds(op.table, op.ids, { ...opt, session })
           } else {
-            throw new Error(`DBOperation not supported: ${op!.type}`)
+            throw new Error(`DBOperation not supported: ${(op as any).type}`)
           }
         }
       })
     } finally {
-      await session.endSession()
+      await session.endSession() // eslint-disable-line @typescript-eslint/await-thenable
     }
     // todo: is catch/revert needed?
   }
