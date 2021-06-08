@@ -59,7 +59,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     log(`close`)
   }
 
-  async ping(): Promise<void> {
+  override async ping(): Promise<void> {
     await this.client()
   }
 
@@ -73,7 +73,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return row as any
   }
 
-  async getTables(): Promise<string[]> {
+  override async getTables(): Promise<string[]> {
     const client = await this.client()
     const colObjects: MongoCollectionObject[] = await client
       .db(this.cfg.db)
@@ -88,14 +88,16 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return colObjects.map(c => c.name)
   }
 
-  async getTableSchema<ROW extends ObjectWithId>(table: string): Promise<CommonSchema<ROW>> {
+  override async getTableSchema<ROW extends ObjectWithId>(
+    table: string,
+  ): Promise<CommonSchema<ROW>> {
     return {
       table,
       fields: [],
     }
   }
 
-  async saveBatch<ROW extends ObjectWithId>(
+  override async saveBatch<ROW extends ObjectWithId>(
     table: string,
     rows: ROW[],
     opt?: MongoDBSaveOptions,
@@ -122,7 +124,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     // console.log(res)
   }
 
-  async getByIds<ROW extends ObjectWithId>(
+  override async getByIds<ROW extends ObjectWithId>(
     table: string,
     ids: string[],
     _opt?: CommonDBOptions,
@@ -142,7 +144,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return items.map(i => this.mapFromMongo(i))
   }
 
-  async deleteByIds(table: string, ids: string[], opt?: MongoDBOptions): Promise<number> {
+  override async deleteByIds(table: string, ids: string[], opt?: MongoDBOptions): Promise<number> {
     if (!ids.length) return 0
 
     const client = await this.client()
@@ -161,7 +163,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return deletedCount || 0
   }
 
-  async runQuery<ROW extends ObjectWithId>(
+  override async runQuery<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
     _opt?: CommonDBOptions,
   ): Promise<RunQueryResult<ROW>> {
@@ -184,7 +186,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return { rows }
   }
 
-  async runQueryCount<ROW extends ObjectWithId>(
+  override async runQueryCount<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
     _opt?: CommonDBOptions,
   ): Promise<number> {
@@ -199,7 +201,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return items.length
   }
 
-  async deleteByQuery<ROW extends ObjectWithId>(
+  override async deleteByQuery<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
     _opt?: CommonDBOptions,
   ): Promise<number> {
@@ -211,7 +213,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return deletedCount || 0
   }
 
-  streamQuery<ROW extends ObjectWithId>(
+  override streamQuery<ROW extends ObjectWithId>(
     q: DBQuery<ROW>,
     _opt?: CommonDBOptions,
   ): ReadableTyped<ROW> {
@@ -245,7 +247,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
   /**
    * https://docs.mongodb.com/manual/core/transactions/
    */
-  async commitTransaction(tx: DBTransaction, opt?: CommonDBSaveOptions): Promise<void> {
+  override async commitTransaction(tx: DBTransaction, opt?: CommonDBSaveOptions): Promise<void> {
     const client = await this.client()
     const session = client.startSession()
     const ops = mergeDBOperations(tx.ops)
