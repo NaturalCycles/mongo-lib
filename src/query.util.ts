@@ -1,8 +1,8 @@
 import { DBQuery, DBQueryFilterOperator, ObjectWithId } from '@naturalcycles/db-lib'
-import { FilterQuery, FindOneOptions, QuerySelector } from 'mongodb'
+import { Filter, FilterOperators, FindOptions } from 'mongodb'
 
 // Map DBQueryFilterOp to Mongo "Comparison query operator"
-const OP_MAP: Partial<Record<DBQueryFilterOperator, keyof QuerySelector<any>>> = {
+const OP_MAP: Partial<Record<DBQueryFilterOperator, keyof FilterOperators<any>>> = {
   '==': '$eq',
   '<': '$lt',
   '<=': '$lte',
@@ -20,10 +20,10 @@ const FNAME_MAP: Record<string, string> = {
 export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
   dbQuery: DBQuery<ROW>,
 ): {
-  query: FilterQuery<any>
-  options: FindOneOptions<any>
+  query: Filter<ROW>
+  options: FindOptions<ROW>
 } {
-  const options = {} as FindOneOptions<any>
+  const options = {} as FindOptions<ROW>
 
   // filter
   // eslint-disable-next-line unicorn/no-array-reduce
@@ -34,7 +34,7 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
       [OP_MAP[f.op] || f.op]: f.val,
     }
     return q
-  }, {} as FilterQuery<any>)
+  }, {} as Filter<any>)
 
   // order
   // eslint-disable-next-line unicorn/no-array-reduce

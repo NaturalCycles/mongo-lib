@@ -12,7 +12,7 @@ import {
 } from '@naturalcycles/db-lib'
 import { _Memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
-import { CommonOptions, FilterQuery, MongoClient, MongoClientOptions } from 'mongodb'
+import { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
 import { Transform } from 'stream'
 import { dbQueryToMongoQuery } from './query.util'
 
@@ -29,8 +29,8 @@ interface MongoCollectionObject {
   type: string
 }
 
-export interface MongoDBSaveOptions extends CommonDBSaveOptions, CommonOptions {}
-export interface MongoDBOptions extends CommonDBOptions, CommonOptions {}
+export interface MongoDBSaveOptions extends CommonDBSaveOptions, CommandOperationOptions {}
+export interface MongoDBOptions extends CommonDBOptions, CommandOperationOptions {}
 
 const log = Debug('nc:mongo-lib')
 
@@ -42,8 +42,8 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
   @_Memo()
   async client(): Promise<MongoClient> {
     const client = new MongoClient(this.cfg.uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      // useNewUrlParser: true,
+      // useUnifiedTopology: true,
       ...(this.cfg.options || {}),
     })
 
@@ -100,7 +100,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
   override async saveBatch<ROW extends ObjectWithId>(
     table: string,
     rows: ROW[],
-    opt?: MongoDBSaveOptions,
+    opt: MongoDBSaveOptions = {},
   ): Promise<void> {
     if (!rows.length) return
 
@@ -134,7 +134,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     const client = await this.client()
     const items: MongoObject<ROW>[] = await client
       .db(this.cfg.db)
-      .collection(table)
+      .collection<ROW>(table)
       .find({
         _id: {
           $in: ids,
@@ -144,7 +144,11 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return items.map(i => this.mapFromMongo(i))
   }
 
-  override async deleteByIds(table: string, ids: string[], opt?: MongoDBOptions): Promise<number> {
+  override async deleteByIds(
+    table: string,
+    ids: string[],
+    opt: MongoDBOptions = {},
+  ): Promise<number> {
     if (!ids.length) return 0
 
     const client = await this.client()
@@ -172,8 +176,8 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
     const items: MongoObject<ROW>[] = await client
       .db(this.cfg.db)
-      .collection(q.table)
-      .find(query, options)
+      .collection<ROW>(q.table)
+      .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
       .toArray()
 
     let rows = items.map(i => this.mapFromMongo(i as any))
@@ -195,8 +199,8 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
     const items: MongoObject<any>[] = await client
       .db(this.cfg.db)
-      .collection(q.table)
-      .find(query, options)
+      .collection<ROW>(q.table)
+      .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
       .toArray()
     return items.length
   }
@@ -208,7 +212,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     const client = await this.client()
     const { query } = dbQueryToMongoQuery(q)
 
-    const { deletedCount } = await client.db(this.cfg.db).collection(q.table).deleteMany(query)
+    const { deletedCount } = await client.db(this.cfg.db).collection<ROW>(q.table).deleteMany(query)
 
     return deletedCount || 0
   }
@@ -228,20 +232,21 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
     void this.client()
       .then(client => {
-        client.db(this.cfg.db).collection(q.table).find(query, options).stream().pipe(transform)
+        client
+          .db(this.cfg.db)
+          .collection<ROW>(q.table)
+          .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
+          .stream()
+          .pipe(transform)
       })
       .catch(err => transform.emit('error', err))
 
     return transform
   }
 
-  async distinct<ROW = any>(
-    table: string,
-    key: string,
-    query: FilterQuery<any> = {},
-  ): Promise<ROW[]> {
+  async distinct<ROW = any>(table: string, key: string, query: Filter<ROW> = {}): Promise<ROW[]> {
     const client = await this.client()
-    return await client.db(this.cfg.db).collection(table).distinct(key, query)
+    return await client.db(this.cfg.db).collection<ROW>(table).distinct(key, query)
   }
 
   /**
