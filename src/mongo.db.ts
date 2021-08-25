@@ -24,11 +24,6 @@ export interface MongoDBCfg {
   options?: MongoClientOptions
 }
 
-interface MongoCollectionObject {
-  name: string
-  type: string
-}
-
 export interface MongoDBSaveOptions extends CommonDBSaveOptions, CommandOperationOptions {}
 export interface MongoDBOptions extends CommonDBOptions, CommandOperationOptions {}
 
@@ -75,7 +70,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
   override async getTables(): Promise<string[]> {
     const client = await this.client()
-    const colObjects: MongoCollectionObject[] = await client
+    const colObjects = await client
       .db(this.cfg.db)
       .listCollections(
         {},
@@ -132,15 +127,15 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     if (!ids.length) return []
 
     const client = await this.client()
-    const items: MongoObject<ROW>[] = await client
+    const items = (await client
       .db(this.cfg.db)
-      .collection<ROW>(table)
+      .collection(table)
       .find({
         _id: {
           $in: ids,
         },
       })
-      .toArray()
+      .toArray()) as MongoObject<ROW>[]
     return items.map(i => this.mapFromMongo(i))
   }
 
@@ -174,11 +169,11 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     const client = await this.client()
     const { query, options } = dbQueryToMongoQuery(q)
 
-    const items: MongoObject<ROW>[] = await client
+    const items = (await client
       .db(this.cfg.db)
       .collection<ROW>(q.table)
       .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
-      .toArray()
+      .toArray()) as MongoObject<ROW>[]
 
     let rows = items.map(i => this.mapFromMongo(i as any))
 

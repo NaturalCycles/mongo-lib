@@ -37,7 +37,7 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
   }, {} as Filter<any>)
 
   // order
-  // eslint-disable-next-line unicorn/no-array-reduce
+  // eslint-disable-next-line unicorn/no-array-reduce, unicorn/prefer-object-from-entries
   options.sort = dbQuery._orders.reduce((map, ord) => {
     map[FNAME_MAP[ord.name] || ord.name] = ord.descending ? -1 : 1
     return map
