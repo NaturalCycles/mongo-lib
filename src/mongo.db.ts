@@ -3,7 +3,6 @@ import {
   CommonDB,
   CommonDBOptions,
   CommonDBSaveOptions,
-  CommonSchema,
   DBQuery,
   DBTransaction,
   mergeDBOperations,
@@ -39,7 +38,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     const client = new MongoClient(this.cfg.uri, {
       // useNewUrlParser: true,
       // useUnifiedTopology: true,
-      ...(this.cfg.options || {}),
+      ...this.cfg.options,
     })
 
     await client.connect()
@@ -81,15 +80,6 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
       )
       .toArray()
     return colObjects.map(c => c.name)
-  }
-
-  override async getTableSchema<ROW extends ObjectWithId>(
-    table: string,
-  ): Promise<CommonSchema<ROW>> {
-    return {
-      table,
-      fields: [],
-    }
   }
 
   override async saveBatch<ROW extends ObjectWithId>(
