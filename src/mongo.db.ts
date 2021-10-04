@@ -1,3 +1,4 @@
+import { Transform } from 'stream'
 import {
   BaseCommonDB,
   CommonDB,
@@ -12,7 +13,6 @@ import {
 import { _Memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
-import { Transform } from 'stream'
 import { dbQueryToMongoQuery } from './query.util'
 
 export type MongoObject<T> = T & { _id: string }
