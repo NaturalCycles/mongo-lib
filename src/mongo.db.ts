@@ -1,4 +1,5 @@
 import { Transform } from 'stream'
+import { AnyObjectWithId } from '@naturalcycles/db-lib/src/db.model'
 import {
   BaseCommonDB,
   CommonDB,
@@ -23,7 +24,9 @@ export interface MongoDBCfg {
   options?: MongoClientOptions
 }
 
-export interface MongoDBSaveOptions extends CommonDBSaveOptions, CommandOperationOptions {}
+export interface MongoDBSaveOptions<ROW extends ObjectWithId = AnyObjectWithId>
+  extends CommonDBSaveOptions<ROW>,
+    CommandOperationOptions {}
 export interface MongoDBOptions extends CommonDBOptions, CommandOperationOptions {}
 
 const log = Debug('nc:mongo-lib')
@@ -85,7 +88,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
   override async saveBatch<ROW extends ObjectWithId>(
     table: string,
     rows: ROW[],
-    opt: MongoDBSaveOptions = {},
+    opt: MongoDBSaveOptions<ROW> = {},
   ): Promise<void> {
     if (!rows.length) return
 

@@ -28,7 +28,7 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
   // filter
   // eslint-disable-next-line unicorn/no-array-reduce
   const query = dbQuery._filters.reduce((q, f) => {
-    const fname = FNAME_MAP[f.name] || f.name
+    const fname = FNAME_MAP[f.name as string] || (f.name as string)
     q[fname] = {
       ...q[fname], // in case there is a "between" query
       [OP_MAP[f.op] || f.op]: f.val,
@@ -39,7 +39,7 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
   // order
   // eslint-disable-next-line unicorn/no-array-reduce, unicorn/prefer-object-from-entries
   options.sort = dbQuery._orders.reduce((map, ord) => {
-    map[FNAME_MAP[ord.name] || ord.name] = ord.descending ? -1 : 1
+    map[FNAME_MAP[ord.name as string] || ord.name] = ord.descending ? -1 : 1
     return map
   }, {})
 
@@ -51,7 +51,7 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
     // eslint-disable-next-line unicorn/no-array-reduce
     options.projection = dbQuery._selectedFieldNames.reduce(
       (map, field) => {
-        map[FNAME_MAP[field] || field] = 1
+        map[FNAME_MAP[field as string] || field] = 1
         return map
       },
       { _id: 1 },
