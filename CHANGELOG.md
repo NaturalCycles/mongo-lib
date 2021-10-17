@@ -1,3 +1,10 @@
+## [3.4.14](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.13...v3.4.14) (2021-10-17)
+
+
+### Bug Fixes
+
+* types ([d09b2c4](https://github.com/NaturalCycles/mongo-lib/commit/d09b2c49f67e6d7912c69c721f5e44330bb1a10b))
+
 ## [3.4.13](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.12...v3.4.13) (2021-10-17)
 
 
