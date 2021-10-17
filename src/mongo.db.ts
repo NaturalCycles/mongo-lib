@@ -1,5 +1,4 @@
 import { Transform } from 'stream'
-import { AnyObjectWithId } from '@naturalcycles/db-lib/src/db.model'
 import {
   BaseCommonDB,
   CommonDB,
@@ -10,6 +9,7 @@ import {
   mergeDBOperations,
   ObjectWithId,
   RunQueryResult,
+  AnyObjectWithId,
 } from '@naturalcycles/db-lib'
 import { _Memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
