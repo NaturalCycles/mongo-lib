@@ -11,7 +11,7 @@ import {
   RunQueryResult,
   AnyObjectWithId,
 } from '@naturalcycles/db-lib'
-import { _Memo, _omit } from '@naturalcycles/js-lib'
+import { _filterUndefinedValues, _Memo, _omit } from '@naturalcycles/js-lib'
 import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
 import { dbQueryToMongoQuery } from './query.util'
@@ -60,9 +60,12 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     await this.client()
   }
 
+  /**
+   * Also filters undefined values, because Mongo, for some reason, saves `undefined` as `null`.
+   */
   protected mapToMongo<ROW extends ObjectWithId>(row: ROW): MongoObject<ROW> {
     const { id: _, ...m } = { ...row, _id: row.id }
-    return m as any
+    return _filterUndefinedValues(m as any, true)
   }
 
   protected mapFromMongo<ROW extends ObjectWithId>(item: MongoObject<ROW>): ROW {
