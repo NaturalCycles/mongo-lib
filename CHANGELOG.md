@@ -1,3 +1,10 @@
+## [3.4.15](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.14...v3.4.15) (2021-10-18)
+
+
+### Bug Fixes
+
+* correctly skip `undefined` values when saving ([140e211](https://github.com/NaturalCycles/mongo-lib/commit/140e211dbf9a0f45b50b29431a3e40671b8654b6))
+
 ## [3.4.14](https://github.com/NaturalCycles/mongo-lib/compare/v3.4.13...v3.4.14) (2021-10-17)
 
 
