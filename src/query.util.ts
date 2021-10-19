@@ -1,4 +1,5 @@
-import { DBQuery, DBQueryFilterOperator, ObjectWithId } from '@naturalcycles/db-lib'
+import { DBQuery, DBQueryFilterOperator } from '@naturalcycles/db-lib'
+import { ObjectWithId } from '@naturalcycles/js-lib'
 import { Filter, FilterOperators, FindOptions } from 'mongodb'
 
 // Map DBQueryFilterOp to Mongo "Comparison query operator"
