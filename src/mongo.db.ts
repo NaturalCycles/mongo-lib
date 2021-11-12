@@ -15,8 +15,10 @@ import {
   _omit,
   ObjectWithId,
   AnyObjectWithId,
+  CommonLogger,
+  commonLoggerPrefix,
 } from '@naturalcycles/js-lib'
-import { Debug, ReadableTyped } from '@naturalcycles/nodejs-lib'
+import { ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
 import { dbQueryToMongoQuery } from './query.util'
 
@@ -26,6 +28,11 @@ export interface MongoDBCfg {
   uri: string
   db: string
   options?: MongoClientOptions
+
+  /**
+   * Default to `console`
+   */
+  logger?: CommonLogger
 }
 
 export interface MongoDBSaveOptions<ROW extends ObjectWithId = AnyObjectWithId>
@@ -33,12 +40,17 @@ export interface MongoDBSaveOptions<ROW extends ObjectWithId = AnyObjectWithId>
     CommandOperationOptions {}
 export interface MongoDBOptions extends CommonDBOptions, CommandOperationOptions {}
 
-const log = Debug('nc:mongo-lib')
-
 export class MongoDB extends BaseCommonDB implements CommonDB {
-  constructor(public cfg: MongoDBCfg) {
+  constructor(cfg: MongoDBCfg) {
     super()
+
+    this.cfg = {
+      ...cfg,
+      logger: commonLoggerPrefix(cfg.logger || console, '[mongo]'),
+    }
   }
+
+  public cfg: MongoDBCfg & { logger: CommonLogger }
 
   @_Memo()
   async client(): Promise<MongoClient> {
@@ -50,14 +62,14 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
     await client.connect()
 
-    log(`connect`)
+    this.cfg.logger.log(`connected`)
     return client
   }
 
   async close(): Promise<void> {
     const client = await this.client()
     await client.close()
-    log(`close`)
+    this.cfg.logger.log(`closed`)
   }
 
   override async ping(): Promise<void> {
