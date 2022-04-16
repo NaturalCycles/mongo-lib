@@ -22,7 +22,7 @@ import { ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
 import { dbQueryToMongoQuery } from './query.util'
 
-export type MongoObject<T> = T & { _id: string }
+export type MongoObject<T> = T & { _id: string | number }
 
 export interface MongoDBCfg {
   uri: string
@@ -133,7 +133,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
 
   override async getByIds<ROW extends ObjectWithId>(
     table: string,
-    ids: string[],
+    ids: ROW['id'][],
     _opt?: CommonDBOptions,
   ): Promise<ROW[]> {
     if (!ids.length) return []
@@ -147,13 +147,13 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
           $in: ids,
         },
       })
-      .toArray()) as MongoObject<ROW>[]
+      .toArray()) as any as MongoObject<ROW>[]
     return items.map(i => this.mapFromMongo(i))
   }
 
-  override async deleteByIds(
+  override async deleteByIds<ROW extends ObjectWithId>(
     table: string,
-    ids: string[],
+    ids: ROW['id'][],
     opt: MongoDBOptions = {},
   ): Promise<number> {
     if (!ids.length) return 0
@@ -185,7 +185,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
       .db(this.cfg.db)
       .collection<ROW>(q.table)
       .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
-      .toArray()) as MongoObject<ROW>[]
+      .toArray()) as any as MongoObject<ROW>[]
 
     let rows = items.map(i => this.mapFromMongo(i as any))
 

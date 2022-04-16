@@ -35,7 +35,7 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
       [OP_MAP[f.op] || f.op]: f.val,
     }
     return q
-  }, {} as Filter<any>)
+  }, {} as Filter<ROW>)
 
   // order
   // eslint-disable-next-line unicorn/no-array-reduce, unicorn/prefer-object-from-entries
