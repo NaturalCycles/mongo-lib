@@ -35,9 +35,10 @@ export interface MongoDBCfg {
   logger?: CommonLogger
 }
 
-export interface MongoDBSaveOptions<ROW extends ObjectWithId = AnyObjectWithId>
+export interface MongoDBSaveOptions<ROW extends Partial<ObjectWithId> = AnyObjectWithId>
   extends CommonDBSaveOptions<ROW>,
     CommandOperationOptions {}
+
 export interface MongoDBOptions extends CommonDBOptions, CommandOperationOptions {}
 
 export class MongoDB extends BaseCommonDB implements CommonDB {
@@ -104,7 +105,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return colObjects.map(c => c.name)
   }
 
-  override async saveBatch<ROW extends ObjectWithId>(
+  override async saveBatch<ROW extends Partial<ObjectWithId>>(
     table: string,
     rows: ROW[],
     opt: MongoDBSaveOptions<ROW> = {},
@@ -121,7 +122,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
             filter: {
               _id: r.id,
             },
-            replacement: this.mapToMongo(r),
+            replacement: this.mapToMongo(r as ObjectWithId),
             upsert: true,
           },
         })),
