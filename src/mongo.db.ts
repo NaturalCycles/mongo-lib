@@ -252,7 +252,11 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return transform
   }
 
-  async distinct<ROW = any>(table: string, key: string, query: Filter<ROW> = {}): Promise<ROW[]> {
+  async distinct<ROW extends ObjectWithId>(
+    table: string,
+    key: string,
+    query: Filter<ROW> = {},
+  ): Promise<ROW[]> {
     const client = await this.client()
     return await client.db(this.cfg.db).collection<ROW>(table).distinct(key, query)
   }

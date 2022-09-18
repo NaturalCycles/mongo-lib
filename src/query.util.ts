@@ -1,6 +1,6 @@
 import { DBQuery, DBQueryFilterOperator } from '@naturalcycles/db-lib'
-import { ObjectWithId } from '@naturalcycles/js-lib'
-import { Filter, FilterOperators, FindOptions } from 'mongodb'
+import { ObjectWithId, StringMap } from '@naturalcycles/js-lib'
+import { Filter, FilterOperators, FindOptions, SortDirection } from 'mongodb'
 
 // Map DBQueryFilterOp to Mongo "Comparison query operator"
 const OP_MAP: Partial<Record<DBQueryFilterOperator, keyof FilterOperators<any>>> = {
@@ -29,9 +29,9 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
   // filter
   // eslint-disable-next-line unicorn/no-array-reduce
   const query = dbQuery._filters.reduce((q, f) => {
-    const fname = FNAME_MAP[f.name as string] || (f.name as string)
-    q[fname] = {
-      ...q[fname], // in case there is a "between" query
+    const fname = FNAME_MAP[f.name as string] || f.name
+    q[fname as keyof Filter<ROW>] = {
+      ...q[fname as keyof Filter<ROW>], // in case there is a "between" query
       [OP_MAP[f.op] || f.op]: f.val,
     }
     return q
@@ -40,9 +40,9 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
   // order
   // eslint-disable-next-line unicorn/no-array-reduce, unicorn/prefer-object-from-entries
   options.sort = dbQuery._orders.reduce((map, ord) => {
-    map[FNAME_MAP[ord.name as string] || ord.name] = ord.descending ? -1 : 1
+    map[FNAME_MAP[ord.name as string] || (ord.name as string)] = ord.descending ? -1 : 1
     return map
-  }, {})
+  }, {} as Record<string, SortDirection>)
 
   // limit
   options.limit = dbQuery._limitValue || undefined
@@ -52,10 +52,10 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
     // eslint-disable-next-line unicorn/no-array-reduce
     options.projection = dbQuery._selectedFieldNames.reduce(
       (map, field) => {
-        map[FNAME_MAP[field as string] || field] = 1
+        map[FNAME_MAP[field as string] || (field as string)] = 1
         return map
       },
-      { _id: 1 },
+      { _id: 1 } as StringMap<number>,
     )
   }
 
