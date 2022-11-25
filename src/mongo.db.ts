@@ -1,4 +1,4 @@
-import { Transform } from 'stream'
+import { Transform } from 'node:stream'
 import {
   BaseCommonDB,
   CommonDB,
@@ -245,6 +245,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
           .collection<ROW>(q.table)
           .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
           .stream()
+          .on('error', err => transform.emit('error', err))
           .pipe(transform)
       })
       .catch(err => transform.emit('error', err))
