@@ -26,6 +26,11 @@ afterAll(async () => {
 describe('runCommonDBTest', () =>
   runCommonDBTest(mongoDB, {
     bufferSupport: false,
+    insert: false,
+    update: false,
+    tableSchemas: false,
+    transactions: false,
+    updateByQuery: false,
   }))
 
 describe('runCommonDaoTest', () => runCommonDaoTest(mongoDB))

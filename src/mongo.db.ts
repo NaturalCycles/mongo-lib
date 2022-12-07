@@ -152,7 +152,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     return items.map(i => this.mapFromMongo(i))
   }
 
-  override async deleteByIds<ROW extends ObjectWithId>(
+  async deleteByIds<ROW extends ObjectWithId>(
     table: string,
     ids: ROW['id'][],
     opt: MongoDBOptions = {},
