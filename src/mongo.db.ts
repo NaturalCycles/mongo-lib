@@ -123,7 +123,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
         rows.map(r => ({
           replaceOne: {
             filter: {
-              _id: r.id,
+              _id: r.id as any,
             },
             replacement: this.mapToMongo(r as ObjectWithId),
             upsert: true,
@@ -148,7 +148,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
       .collection(table)
       .find({
         _id: {
-          $in: ids,
+          $in: ids as any[],
         },
       })
       .toArray()) as any as MongoObject<ROW>[]
@@ -169,7 +169,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
       .deleteMany(
         {
           _id: {
-            $in: ids,
+            $in: ids as any[],
           },
         },
         opt,
