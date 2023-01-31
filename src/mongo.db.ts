@@ -17,6 +17,7 @@ import {
   AnyObjectWithId,
   CommonLogger,
   commonLoggerPrefix,
+  _assert,
 } from '@naturalcycles/js-lib'
 import { ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
@@ -111,6 +112,8 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     opt: MongoDBSaveOptions<ROW> = {},
   ): Promise<void> {
     if (!rows.length) return
+
+    _assert(!rows.some(r => r.id === null), `id cannot be null in saveBatch`)
 
     const client = await this.client()
     await client
