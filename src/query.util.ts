@@ -38,11 +38,14 @@ export function dbQueryToMongoQuery<ROW extends ObjectWithId>(
   }, {} as Filter<ROW>)
 
   // order
-  // eslint-disable-next-line unicorn/no-array-reduce, unicorn/prefer-object-from-entries
-  options.sort = dbQuery._orders.reduce((map, ord) => {
-    map[FNAME_MAP[ord.name as string] || (ord.name as string)] = ord.descending ? -1 : 1
-    return map
-  }, {} as Record<string, SortDirection>)
+  // eslint-disable-next-line unicorn/no-array-reduce
+  options.sort = dbQuery._orders.reduce(
+    (map, ord) => {
+      map[FNAME_MAP[ord.name as string] || (ord.name as string)] = ord.descending ? -1 : 1
+      return map
+    },
+    {} as Record<string, SortDirection>,
+  )
 
   // limit
   options.limit = dbQuery._limitValue || undefined

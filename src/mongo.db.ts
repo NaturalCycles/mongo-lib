@@ -42,7 +42,7 @@ export interface MongoDBSaveOptions<ROW extends Partial<ObjectWithId> = AnyObjec
 
 export interface MongoDBOptions extends CommonDBOptions, CommandOperationOptions {}
 
-export class MongoDB extends BaseCommonDB implements CommonDB {
+export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
   constructor(cfg: MongoDBCfg) {
     super()
 
@@ -52,7 +52,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     }
   }
 
-  public cfg: MongoDBCfg & { logger: CommonLogger }
+  cfg: MongoDBCfg & { logger: CommonLogger }
 
   @_Memo()
   async client(): Promise<MongoClient> {
@@ -72,6 +72,10 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
     const client = await this.client()
     await client.close()
     this.cfg.logger.log(`closed`)
+  }
+
+  async [Symbol.asyncDispose](): Promise<void> {
+    await this.close()
   }
 
   override async ping(): Promise<void> {
@@ -287,7 +291,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB {
         }
       })
     } finally {
-      await session.endSession() // eslint-disable-line @typescript-eslint/await-thenable
+      await session.endSession()
     }
     // todo: is catch/revert needed?
   }

@@ -5,8 +5,7 @@ DEBUG=nc* yarn tsn backup.script.ts
  */
 
 import { dbPipelineBackup } from '@naturalcycles/db-lib'
-import { requireEnvKeys } from '@naturalcycles/nodejs-lib'
-import { runScript } from '@naturalcycles/nodejs-lib/dist/script'
+import { requireEnvKeys, runScript } from '@naturalcycles/nodejs-lib'
 import { MongoDB } from '../src'
 import { tmpDir } from '../src/test/paths.cnst'
 
