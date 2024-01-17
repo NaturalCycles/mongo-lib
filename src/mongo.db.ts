@@ -2,11 +2,11 @@ import { Transform } from 'node:stream'
 import {
   BaseCommonDB,
   CommonDB,
+  commonDBFullSupport,
   CommonDBOptions,
   CommonDBSaveOptions,
+  CommonDBSupport,
   DBQuery,
-  DBTransaction,
-  mergeDBOperations,
   RunQueryResult,
 } from '@naturalcycles/db-lib'
 import {
@@ -43,6 +43,16 @@ export interface MongoDBSaveOptions<ROW extends Partial<ObjectWithId> = AnyObjec
 export interface MongoDBOptions extends CommonDBOptions, CommandOperationOptions {}
 
 export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
+  override support: CommonDBSupport = {
+    ...commonDBFullSupport,
+    bufferValues: false,
+    insertSaveMethod: false,
+    updateSaveMethod: false,
+    tableSchemas: false,
+    transactions: false,
+    updateByQuery: false,
+  }
+
   constructor(cfg: MongoDBCfg) {
     super()
 
@@ -141,7 +151,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
 
   override async getByIds<ROW extends ObjectWithId>(
     table: string,
-    ids: ROW['id'][],
+    ids: string[],
     _opt?: CommonDBOptions,
   ): Promise<ROW[]> {
     if (!ids.length) return []
@@ -159,9 +169,9 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
     return items.map(i => this.mapFromMongo(i))
   }
 
-  async deleteByIds<ROW extends ObjectWithId>(
+  override async deleteByIds(
     table: string,
-    ids: ROW['id'][],
+    ids: string[],
     opt: MongoDBOptions = {},
   ): Promise<number> {
     if (!ids.length) return 0
@@ -272,27 +282,27 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
   /**
    * https://docs.mongodb.com/manual/core/transactions/
    */
-  override async commitTransaction(tx: DBTransaction, opt?: CommonDBSaveOptions): Promise<void> {
-    const client = await this.client()
-    const session = client.startSession()
-    const ops = mergeDBOperations(tx.ops)
-
-    try {
-      await session.withTransaction(async () => {
-        for await (const op of ops) {
-          if (op.type === 'saveBatch') {
-            // Important: You must pass the session to the operations
-            await this.saveBatch(op.table, op.rows, { ...opt, session })
-          } else if (op.type === 'deleteByIds') {
-            await this.deleteByIds(op.table, op.ids, { ...opt, session })
-          } else {
-            throw new Error(`DBOperation not supported: ${(op as any).type}`)
-          }
-        }
-      })
-    } finally {
-      await session.endSession()
-    }
-    // todo: is catch/revert needed?
-  }
+  // override async commitTransaction(tx: DBTransaction, opt?: CommonDBSaveOptions): Promise<void> {
+  //   const client = await this.client()
+  //   const session = client.startSession()
+  //   const ops = mergeDBOperations(tx.ops)
+  //
+  //   try {
+  //     await session.withTransaction(async () => {
+  //       for await (const op of ops) {
+  //         if (op.type === 'saveBatch') {
+  //           // Important: You must pass the session to the operations
+  //           await this.saveBatch(op.table, op.rows, { ...opt, session })
+  //         } else if (op.type === 'deleteByIds') {
+  //           await this.deleteByIds(op.table, op.ids, { ...opt, session })
+  //         } else {
+  //           throw new Error(`DBOperation not supported: ${(op as any).type}`)
+  //         }
+  //       }
+  //     })
+  //   } finally {
+  //     await session.endSession()
+  //   }
+  //   // todo: is catch/revert needed?
+  // }
 }
