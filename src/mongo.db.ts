@@ -14,7 +14,6 @@ import {
   _Memo,
   _omit,
   ObjectWithId,
-  AnyObjectWithId,
   CommonLogger,
   commonLoggerPrefix,
   _assert,
@@ -36,7 +35,7 @@ export interface MongoDBCfg {
   logger?: CommonLogger
 }
 
-export interface MongoDBSaveOptions<ROW extends Partial<ObjectWithId> = AnyObjectWithId>
+export interface MongoDBSaveOptions<ROW extends ObjectWithId>
   extends CommonDBSaveOptions<ROW>,
     CommandOperationOptions {}
 
@@ -120,7 +119,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
     return colObjects.map(c => c.name)
   }
 
-  override async saveBatch<ROW extends Partial<ObjectWithId>>(
+  override async saveBatch<ROW extends ObjectWithId>(
     table: string,
     rows: ROW[],
     opt: MongoDBSaveOptions<ROW> = {},
