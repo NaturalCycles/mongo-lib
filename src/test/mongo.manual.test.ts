@@ -3,8 +3,6 @@ import { runCommonDaoTest, runCommonDBTest } from '@naturalcycles/db-lib/dist/te
 import {
   createTestItemsBM,
   testItemBMSchema,
-  testItemDBMSchema,
-  testItemTMSchema,
   TEST_TABLE,
 } from '@naturalcycles/db-lib/dist/testing/test.model'
 import { requireEnvKeys } from '@naturalcycles/nodejs-lib'
@@ -31,9 +29,7 @@ test.skip('some', async () => {
   const dao = new CommonDao({
     table: TEST_TABLE,
     db: mongoDB,
-    dbmSchema: testItemDBMSchema,
     bmSchema: testItemBMSchema,
-    tmSchema: testItemTMSchema,
     logStarted: true,
     logLevel: CommonDaoLogLevel.DATA_FULL,
   })
