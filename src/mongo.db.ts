@@ -10,13 +10,13 @@ import {
   RunQueryResult,
 } from '@naturalcycles/db-lib'
 import {
+  _assert,
   _filterUndefinedValues,
   _Memo,
   _omit,
-  ObjectWithId,
   CommonLogger,
   commonLoggerPrefix,
-  _assert,
+  ObjectWithId,
 } from '@naturalcycles/js-lib'
 import { ReadableTyped } from '@naturalcycles/nodejs-lib'
 import { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
@@ -49,7 +49,8 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
     updateSaveMethod: false,
     tableSchemas: false,
     transactions: false,
-    updateByQuery: false,
+    patchByQuery: false,
+    increment: false,
   }
 
   constructor(cfg: MongoDBCfg) {
@@ -201,7 +202,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
     const items = (await client
       .db(this.cfg.db)
       .collection<ROW>(q.table)
-      .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
+      .find(query, options)
       .toArray()) as any as MongoObject<ROW>[]
 
     let rows = items.map(i => this.mapFromMongo(i as any))
@@ -224,7 +225,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
     const items: MongoObject<any>[] = await client
       .db(this.cfg.db)
       .collection<ROW>(q.table)
-      .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
+      .find(query, options)
       .toArray()
     return items.length
   }
@@ -259,7 +260,7 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
         client
           .db(this.cfg.db)
           .collection<ROW>(q.table)
-          .find(query, options) // eslint-disable-line unicorn/no-array-method-this-argument
+          .find(query, options)
           .stream()
           .on('error', err => transform.emit('error', err))
           .pipe(transform)

@@ -2,8 +2,8 @@ import { CommonDao, CommonDaoLogLevel } from '@naturalcycles/db-lib'
 import { runCommonDaoTest, runCommonDBTest } from '@naturalcycles/db-lib/dist/testing'
 import {
   createTestItemsBM,
-  testItemBMSchema,
   TEST_TABLE,
+  testItemBMSchema,
 } from '@naturalcycles/db-lib/dist/testing/test.model'
 import { requireEnvKeys } from '@naturalcycles/nodejs-lib'
 import { MongoDB } from '../mongo.db'
