@@ -1,13 +1,13 @@
 /*
 
-DEBUG=nc* yarn tsn backup.script.ts
+yarn tsx scripts/backup.script.ts
 
  */
 
 import { dbPipelineBackup } from '@naturalcycles/db-lib'
 import { requireEnvKeys, runScript } from '@naturalcycles/nodejs-lib'
-import { MongoDB } from '../src'
-import { tmpDir } from '../src/test/paths.cnst'
+import { MongoDB } from '../src/index.js'
+import { tmpDir } from '../src/test/paths.cnst.js'
 
 const { MONGO_URI } = requireEnvKeys('MONGO_URI')
 

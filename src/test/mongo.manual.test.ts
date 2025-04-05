@@ -1,15 +1,14 @@
+import 'dotenv/config'
 import { CommonDao, CommonDaoLogLevel } from '@naturalcycles/db-lib'
-import { runCommonDaoTest, runCommonDBTest } from '@naturalcycles/db-lib/dist/testing'
+import { runCommonDaoTest, runCommonDBTest } from '@naturalcycles/db-lib/dist/testing/index.js'
 import {
   createTestItemsBM,
   TEST_TABLE,
   testItemBMSchema,
-} from '@naturalcycles/db-lib/dist/testing/test.model'
+} from '@naturalcycles/db-lib/dist/testing/test.model.js'
 import { requireEnvKeys } from '@naturalcycles/nodejs-lib'
-import { MongoDB } from '../mongo.db'
-
-jest.setTimeout(60000)
-require('dotenv').config()
+import { afterAll, describe, test } from 'vitest'
+import { MongoDB } from '../mongo.db.js'
 const { MONGO_URI } = requireEnvKeys('MONGO_URI')
 
 const mongoDB = new MongoDB({

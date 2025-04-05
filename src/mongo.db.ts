@@ -1,26 +1,24 @@
 import { Transform } from 'node:stream'
-import {
-  BaseCommonDB,
+import type {
   CommonDB,
-  commonDBFullSupport,
   CommonDBOptions,
   CommonDBSaveOptions,
   CommonDBSupport,
   DBQuery,
   RunQueryResult,
 } from '@naturalcycles/db-lib'
+import { BaseCommonDB, commonDBFullSupport } from '@naturalcycles/db-lib'
+import type { CommonLogger, ObjectWithId } from '@naturalcycles/js-lib'
 import {
   _assert,
   _filterUndefinedValues,
   _Memo,
   _omit,
-  CommonLogger,
   commonLoggerPrefix,
-  ObjectWithId,
 } from '@naturalcycles/js-lib'
-import { ReadableTyped } from '@naturalcycles/nodejs-lib'
-import { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
-import { dbQueryToMongoQuery } from './query.util'
+import type { ReadableTyped } from '@naturalcycles/nodejs-lib'
+import type { CommandOperationOptions, Filter, MongoClient, MongoClientOptions } from 'mongodb'
+import { dbQueryToMongoQuery } from './query.util.js'
 
 export type MongoObject<T> = T & { _id: string | number }
 
@@ -66,6 +64,8 @@ export class MongoDB extends BaseCommonDB implements CommonDB, AsyncDisposable {
 
   @_Memo()
   async client(): Promise<MongoClient> {
+    const { MongoClient } = await import('mongodb')
+
     const client = new MongoClient(this.cfg.uri, {
       // useNewUrlParser: true,
       // useUnifiedTopology: true,

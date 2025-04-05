@@ -1,6 +1,6 @@
-import { DBQuery, DBQueryFilterOperator } from '@naturalcycles/db-lib'
-import { ObjectWithId, StringMap } from '@naturalcycles/js-lib'
-import { Filter, FilterOperators, FindOptions, SortDirection } from 'mongodb'
+import type { DBQuery, DBQueryFilterOperator } from '@naturalcycles/db-lib'
+import type { ObjectWithId, StringMap } from '@naturalcycles/js-lib'
+import type { Filter, FilterOperators, FindOptions, SortDirection } from 'mongodb'
 
 // Map DBQueryFilterOp to Mongo "Comparison query operator"
 const OP_MAP: Partial<Record<DBQueryFilterOperator, keyof FilterOperators<any>>> = {
